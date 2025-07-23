@@ -1,0 +1,16 @@
+[
+  {
+    "id": 15,
+    "type": "offre",
+    "titre": "Stage Dev",
+    "description": "EY, stage en informatique, 3 mois à Tunis",
+    "lieu": "Tunis",
+    "date_publication": "2025-06-27"
+  },
+  {
+    "id": 291,
+    "type": "evenement",
+    "titre": "Événement scrappé n°1",
+    "description": "Ville 1, du 2025-07-02 au 2025-07-03"
+  }
+]
