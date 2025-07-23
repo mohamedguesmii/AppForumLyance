@@ -1,0 +1,13 @@
+<!-- Statistiques globales par type -->
+<div class="stats-container">
+  <h2 class="stats-title">Statistiques globales par type de réservation</h2>
+  <ul class="stats-list centered-list">
+    <li *ngFor="let stat of reservationStats | keyvalue">
+      {{ stat.key | slice:0:14 | uppercase }} : {{ stat.value }}
+    </li>
+  </ul>
+  <div class="chart-wrapper">
+    <canvas #chartCanvas></canvas>
+  </div>
+</div>
+

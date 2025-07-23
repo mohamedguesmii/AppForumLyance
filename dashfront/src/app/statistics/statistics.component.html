@@ -1,0 +1,16 @@
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-md-3" *ngFor="let stat of cards">
+      <div class="card mb-4">
+        <div class="card-body">
+          <p class="text-black mb-0">{{ stat.title }}</p>
+          <span class="fs-28 text-black font-w600 mb-2 d-block">{{ stat.total_no }}</span>
+          <div class="d-flex align-items-center">
+            <img [src]="stat.image" class="min-w42 me-3" alt="Icon {{stat.title}}" />
+            <div *ngIf="stat.description" [innerHTML]="stat.description"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

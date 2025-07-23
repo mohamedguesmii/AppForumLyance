@@ -1,0 +1,92 @@
+<!-- Bouton retour en haut à gauche -->
+<button
+  type="button"
+  class="btn btn-warning fw-bold px-4"
+  (click)="goBack()"
+  style="position: fixed; top: 20px; left: 20px; z-index: 1050;"
+>
+  Retour
+</button>
+
+
+<div class="main-container" role="main" aria-live="polite">
+  <div *ngIf="rdv" class="card visio-card p-5 shadow-lg position-relative" tabindex="0" aria-label="Détails de l'entretien en ligne">
+    
+    <!-- Logo Lyance -->
+    <div class="logo-lyance-container text-center mb-4">
+      <img src="assets/frontoffice/img/Logo_Lyance.png" alt="Logo Lyance" width="120" />
+    </div>
+
+    <header class="visio-header text-center mb-4">
+      <div class="icon-circle mx-auto mb-3" aria-hidden="true">
+        <i class="fas fa-video fa-1x text-primary"></i>
+      </div>
+      <h1 class="fw-bold entretien-titre">Bienvenue à l’entretien de recrutement</h1>
+      <p class="text-muted fst-italic">
+        Préparez-vous à votre entretien en visioconférence<br />
+        <strong>Date & Heure :</strong> {{ rdv.dateHeure | date:'dd/MM/yyyy HH:mm' }}
+      </p>
+    </header>
+
+    <section class="candidate-info d-flex flex-column flex-md-row align-items-center justify-content-center mb-5 gap-4">
+      <img
+        [src]="rdv.candidature.imageUrl || 'assets/frontoffice/img/speakers/default.jpg'"
+        alt="Photo du candidat {{ rdv.candidature.nom }} {{ rdv.candidature.prenom }}"
+        width="90" height="90"
+        class="rounded-circle border border-2 border-primary shadow-sm"
+      />
+      <div class="candidate-details text-center text-md-start">
+        <h2 class="mb-1 fw-bold fs-4 text-white">{{ rdv.candidature.nom }} {{ rdv.candidature.prenom }}</h2>
+        <p class="mb-0 text-primary">{{ rdv.candidature.email }}</p>
+        <p class="mb-0 mt-1 fst-italic text-info" *ngIf="rdv.candidature.tel">📞 {{ rdv.candidature.tel }}</p>
+      </div>
+    </section>
+
+    <section class="status-timer mb-4 text-center">
+      <p
+        class="status-label fw-semibold fs-5"
+        [ngClass]="{
+          'text-warning': rdvStatus === 'À venir',
+          'text-success': rdvStatus === 'En cours',
+          'text-danger': rdvStatus === 'Terminé'
+        }"
+        aria-live="polite"
+      >
+        Statut : {{ rdvStatus }}
+      </p>
+      <p *ngIf="rdvStatus !== 'Terminé'" class="countdown fs-6 fw-semibold" aria-live="polite">
+        Commence dans : {{ countdown }}
+      </p>
+    </section>
+
+    <section class="visio-action mb-4 text-center">
+      <!-- Bouton visible uniquement si le salon n'est pas encore affiché -->
+      <button
+        *ngIf="rdvStatus === 'En cours' && !sanitizedLienVisio"
+        class="btn btn-success btn-lg"
+        (click)="lancerSalon()"
+        aria-label="Commencer l'entretien"
+      >
+        ▶ Commencer l'entretien
+      </button>
+
+      <!-- Iframe salon -->
+      <div *ngIf="rdvStatus === 'En cours' && sanitizedLienVisio" class="jitsi-container mt-4">
+        <iframe
+          [src]="sanitizedLienVisio"
+          allow="camera; microphone; fullscreen; display-capture"
+          style="width: 100%; height: 600px; border: none; border-radius: 8px;"
+        ></iframe>
+      </div>
+    </section>
+
+    <section class="info-pratique text-center text-white-custom small fst-italic mb-0">
+      <p>Merci de vérifier votre connexion internet avant de rejoindre.</p>
+      <p>Pour toute question, contactez le support RH.</p>
+      <p class="mt-2">
+        <a href="mailto:support@exemple.com" class="text-decoration-none text-white-custom">support.com</a>
+      </p>
+    </section>
+
+  </div>
+</div>

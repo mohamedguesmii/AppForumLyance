@@ -1,0 +1,16 @@
+<!-- Bouton rond flottant -->
+<button class="chat-button" (click)="toggleChat()">
+  💬
+</button>
+
+<!-- Zone de chat -->
+<div class="chat-box" *ngIf="chatVisible">
+  <h4>Pose ta question</h4>
+  <textarea [(ngModel)]="userQuestion" placeholder="Demande sur forums, offres, événements..."></textarea>
+  <button (click)="sendQuestion()">Envoyer</button>
+
+  <div *ngIf="response">
+    <p><strong>Réponse:</strong></p>
+    <pre>{{ response }}</pre>
+  </div>
+</div>

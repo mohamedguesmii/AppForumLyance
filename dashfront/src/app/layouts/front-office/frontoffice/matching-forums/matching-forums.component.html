@@ -1,0 +1,18 @@
+<div *ngIf="loading">Chargement en cours...</div>
+<div *ngIf="errorMsg">{{ errorMsg }}</div>
+
+<div *ngIf="!loading && forumsMatched.length > 0">
+  <div *ngFor="let match of forumsMatched" class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">{{ match.evenement.title }}</h5>
+      <p class="card-text">{{ match.evenement.description }}</p>
+      <p><strong>Adresse:</strong> {{ match.evenement.adresse }}</p>
+      <p><strong>Score de matching:</strong> {{ match.score }}</p>
+      <div class="progress">
+        <div class="progress-bar" [style.width.%]="(match.score / maxScore) * 100" role="progressbar">
+          {{ match.score }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

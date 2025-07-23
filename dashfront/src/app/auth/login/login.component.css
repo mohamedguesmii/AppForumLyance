@@ -1,0 +1,380 @@
+/* Animation fade in + slide up */
+/* Ajoute ces styles dans login.component.css (ou global.css si tu préfères) */
+
+.custom-blue-btn {
+  background-color: #0537dc;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.custom-blue-btn:hover {
+  background-color: #275ffd;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.custom-blue-btn-outline {
+  color: #01015f;
+  background-color: white;
+  border: 2px solid #01015f;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.custom-blue-btn-outline:hover {
+  background-color: #000000;
+  color: white;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.back-button {
+  background-color: #040d1d; /* bleu foncé */
+  color: white; /* texte blanc */
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+  font-weight: 600;
+  user-select: none;
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: slideFadeIn 0.5s forwards ease-out;
+}
+.back-button:hover {
+  background-color: #010b3d;
+  box-shadow: 0 4px 8px rgba(2, 86, 216, 0.5);
+}
+
+.back-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  
+}
+
+@keyframes slideFadeIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.login-wrapper {
+  position: relative; /* important pour positionner le bouton absolute */
+}
+
+.position-absolute {
+  position: absolute !important;
+}
+
+.top-0 {
+  top: 0 !important;
+}
+
+.start-0 {
+  left: 0 !important;
+}
+
+.m-3 {
+  margin: 1rem !important;
+}
+
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btn-animated-ia {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.4);
+}
+
+.btn-animated-ia:hover:not(:disabled) {
+  background-color: #004aad; /* teinte plus foncée de bleu */
+  box-shadow: 0 6px 12px rgba(0, 74, 173, 0.7);
+  transform: scale(1.05);
+}
+
+.btn-animated-ia:active:not(:disabled) {
+  transform: scale(0.95);
+  box-shadow: 0 3px 6px rgba(0, 74, 173, 0.5);
+}
+
+.btn-animated-ia:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+  background-color: #6c757d; /* gris bootstrap disabled */
+}
+
+.text-gray-links {
+  color: #6c757d; /* gris bootstrap secondary */
+  font-size: 0.9rem;
+}
+
+.link-gray {
+  color: #6c757d;
+  text-decoration: underline;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.link-gray:hover {
+  color: #343a40; /* gris foncé au survol */
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-black {
+  background-color: #000000; /* Noir */
+  color: white;
+  border: none;
+}
+
+.btn-black:hover {
+  background-color: #1a1a1a; /* Noir légèrement plus clair au survol */
+}
+
+
+/* Minimisation des champs de formulaire */
+.form-control-animated {
+  padding: 0.375rem 0.5rem 0.375rem 2rem; /* réduction du padding + icône */
+  font-size: 0.85rem; /* texte plus petit */
+  height: 36px; /* hauteur réduite */
+}
+
+/* Réduction de la taille des icônes dans les champs */
+.position-relative i.bi {
+  font-size: 0.9rem;
+  left: 10px;
+}
+
+/* Réduction des labels */
+.form-label {
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Style input avec animation et glow inspiré IA */
+.form-control-animated-ia {
+  background: #1e1e2f;
+  border: 2px solid #44475a;
+  color: #f8f8f2;
+  border-radius: 8px;
+  padding: 1.25rem 1rem 0.375rem 3rem;
+  font-weight: 500;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: inset 0 0 8px #6272a4;
+}
+
+.form-control-animated-ia::placeholder {
+  color: transparent; /* placeholder caché car on utilise form-floating label */
+}
+
+.form-control-animated-ia:focus {
+  border-color: #6272a4;
+  outline: none;
+  box-shadow: 0 0 10px #6272a4, inset 0 0 12px #6272a4;
+  background: #282a36;
+  color: #f8f8f2;
+}
+
+/* Positionnement icône à gauche dans l'input */
+.form-floating .bi {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.25rem;
+  color: #6272a4;
+  pointer-events: none;
+}
+
+/* Animation label flottant */
+.form-floating > label {
+  padding-left: 3rem;
+  transition: color 0.3s ease, transform 0.3s ease, font-size 0.3s ease;
+  color: #6272a4;
+  font-weight: 600;
+  user-select: none;
+}
+
+.form-control-animated-ia:focus + label,
+.form-control-animated-ia:not(:placeholder-shown) + label {
+  color: #50fa7b;
+  font-size: 0.85rem;
+  transform: translateY(-1.5rem) translateX(0.5rem);
+}
+
+/* Texte d'erreur */
+.text-danger {
+  font-weight: 500;
+}
+
+/* Optionnel : animation légère pour l'apparition de la validation */
+.text-danger small {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+
+  /* Animation d'entrée du formulaire */
+  .login-container {
+    animation: fadeSlideIn 1s ease forwards;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  @keyframes fadeSlideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Animation titre bounce */
+  .login-title {
+    animation: bounceIn 1s ease-out;
+  }
+
+  @keyframes bounceIn {
+    0% {
+      transform: translateY(-50px);
+      opacity: 0;
+    }
+    60% {
+      transform: translateY(10px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  /* Animation focus pour inputs */
+  .form-control-animated {
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    border: 1.5px solid #ced4da;
+    border-radius: 0.375rem;
+  }
+  .form-control-animated:focus {
+    box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.5);
+    border-color: #000101;
+    outline: none;
+  }
+
+  /* Bouton se connecter animé */
+  .btn-animated {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-animated:enabled:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(2, 4, 8, 0.6);
+  }
+  .btn-animated:enabled:active {
+    transform: scale(0.98);
+    box-shadow: none;
+  }
+
+  /* Social buttons hover color */
+  .social-btn .social-icon {
+    width: 20px;
+    height: 20px;
+    transition: filter 0.3s ease;
+  }
+  .social-btn:hover .social-icon {
+    filter: brightness(0) saturate(100%) invert(27%) sepia(80%) saturate(6213%) hue-rotate(205deg) brightness(102%) contrast(102%);
+  }
+
+  .text-dark {
+    color: #212529 !important;
+  }
+
+
+
+.login-wrapper {
+  min-height: 100vh;
+  background-image: url('/assets/frontoffice/img/bsss.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: fadeSlideIn 1s ease forwards;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.login-container {
+  animation: fadeSlideIn 0.8s ease forwards;
+}
+
+.animate-title {
+  animation: bounceIn 1s ease forwards;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.position-relative i {
+  pointer-events: none;
+}
+
+.social-icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(0.3);
+}
+
+/* Hover effects on social buttons */
+.social-btn {
+  font-weight: 600;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.social-btn:hover {
+  color: #fff !important;
+}
+
+/* Specific colors for each social button on hover */
+.github-btn:hover {
+  background-color: #333;
+  border-color: #333;
+}
+
+
+
+.google-btn:hover {
+  background-color: #ea4335;
+  border-color: #ea4335;
+}
+
+/* Disabled state for submit button */
+.btn-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

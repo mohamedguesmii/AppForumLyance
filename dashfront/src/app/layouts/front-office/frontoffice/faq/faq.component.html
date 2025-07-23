@@ -1,0 +1,21 @@
+<div class="faq-container">
+  <h2>Foire Aux Questions (FAQ)</h2>
+
+  <div *ngFor="let item of faqs; let i = index" class="faq-item">
+    <h4 
+      class="faq-question" 
+      (click)="toggleFaq(i)" 
+      [attr.aria-expanded]="item.open" 
+      role="button" 
+      tabindex="0"
+      (keydown.enter)="toggleFaq(i)"
+      (keydown.space)="toggleFaq(i)"
+    >
+      {{ item.question }}
+      <span class="arrow" [style.transform]="item.open ? 'rotate(90deg)' : 'rotate(0deg)'">▶</span>
+    </h4>
+    <p *ngIf="item.open" class="faq-answer" role="region" aria-live="polite">
+      {{ item.answer }}
+    </p>
+  </div>
+</div>

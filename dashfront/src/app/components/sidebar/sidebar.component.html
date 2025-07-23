@@ -1,0 +1,73 @@
+<div class="logo" style="background: linear-gradient(135deg, #000000 0%, #01342f 50%, #000000 100%); padding: 1.3rem;">
+  <a href="/front" class="simple-text flex items-center text-white no-underline">
+    <div class="logo-img mr-2">
+      <img src="/assets/img/Icone-Lyance.png" alt="Logo Lyance" style="height: 45px;" />
+    </div>
+    <span style="font-weight: bold; font-size: 1.4rem;">LYANCE</span>
+  </a>
+</div>
+
+
+<div class="sidebar-wrapper" 
+     style="height: 100vh; color: white; overflow-y: auto; 
+background: linear-gradient(135deg, #000000 0%, #06413b 50%, #000000 100%);
+">
+
+  <ul class="nav" style="list-style: none; padding-left: 0;">
+    <li *ngFor="let menuItem of menuItems" class="nav-item">
+
+      <!-- Cas spécial logout -->
+      <!-- Cas spécial logout -->
+<a *ngIf="menuItem.action === 'logout'"
+   (click)="onLinkClick(menuItem)"
+   class="nav-link flex items-center text-white no-underline py-2 px-2 hover:bg-gray-800 rounded cursor-pointer"
+   style="justify-content: flex-start;">
+  <i class="material-icons mr-3">{{ menuItem.icon }}</i>
+  <p class="m-0">{{ menuItem.title }}</p>
+</a>
+
+      <!-- Lien simple sans sous-menu et pas logout -->
+      <a *ngIf="!menuItem.children && !menuItem.action"
+         class="nav-link flex items-center text-white no-underline py-2 px-2 hover:bg-gray-800 rounded"
+         [routerLink]="[menuItem.path]"
+         routerLinkActive="active-nav"
+         [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <i class="material-icons mr-3">{{ menuItem.icon }}</i>
+        <p class="m-0">{{ menuItem.title }}</p>
+      </a>
+
+      <!-- Menu avec sous-menu -->
+      <div *ngIf="menuItem.children && !menuItem.action" class="flex flex-col">
+        <a
+          href="javascript:void(0)"
+          (click)="toggleSubMenu(menuItem)"
+          class="nav-link flex items-center text-white no-underline py-2 px-2 hover:bg-gray-800 rounded cursor-pointer"
+          style="justify-content: flex-start;"
+        >
+          <i class="material-icons mr-3">{{ menuItem.icon }}</i>
+          <p class="m-0">{{ menuItem.title }}</p>
+        </a>
+
+        <ul
+          *ngIf="menuItem.expanded"
+          style="list-style: none; padding-left: 2.5rem; margin-top: 0.25rem;"
+        >
+          <li *ngFor="let child of menuItem.children" class="nav-item">
+            <a
+              class="nav-link flex items-center text-white no-underline py-1 px-2 hover:bg-gray-700 rounded"
+              [routerLink]="[child.path]"
+              routerLinkActive="active-nav"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <i class="material-icons mr-3" style="font-size: 18px;">{{ child.icon }}</i>
+              <p class="m-0 text-sm">{{ child.title }}</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+    </li>
+  </ul>
+
+</div>

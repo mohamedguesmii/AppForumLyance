@@ -1,0 +1,70 @@
+
+.custom-gradient-btn {
+  background: linear-gradient(135deg, #01272c, #641971); /* Bleu & violet */
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 0; /* Carré */
+  transition: background 0.3s ease, transform 0.2s ease;
+  text-transform: uppercase;
+}
+
+.custom-gradient-btn:hover {
+  background: linear-gradient(135deg, #0097a7, #7b1fa2);
+  transform: scale(1.03);
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #068083, #000000);
+  color: white;
+  font-weight: 600;
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-gradient:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+
+.evenements-container .card {
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.evenements-container .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.evenements-container .card-title {
+  font-weight: 700;
+}
+
+.evenements-container .card-subtitle i {
+  color: #0d6efd; /* bleu bootstrap */
+}
+
+
+
+.btn-gradient-primary {
+  background: linear-gradient(135deg, #0d8f8f, #35c2c2);
+  border: none;
+  color: white;
+  transition: background 0.3s ease;
+}
+.btn-gradient-primary:hover {
+  background: linear-gradient(135deg, #35c2c2, #0d8f8f);
+}
+.text-gradient {
+  background: linear-gradient(90deg, #0d8f8f, #35c2c2);
+  -webkit-text-fill-color: transparent;
+}

@@ -1,0 +1,53 @@
+<div class="container mt-4" *ngIf="!loading && task">
+  <h2 class="mb-3">📄 Détails du processus</h2>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">{{ task.name }}</h5>
+      <p class="card-text">
+        <strong>ID :</strong> {{ task.id }} <br>
+        <strong>Process Instance ID :</strong> {{ task.processInstanceId }} <br>
+        <strong>Événement :</strong> {{ task.eventTitle }} <br>
+        <strong>Statut :</strong>
+        <span [ngClass]="getStatutColor(task.statut)">
+          {{ task.statut || 'En attente' }}
+        </span>
+      </p>
+
+      <div *ngIf="task.variables && Object.keys(task.variables).length > 0">
+        <h6 class="mt-4">🔧 Variables du processus :</h6>
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let key of Object.keys(task.variables)">
+            <strong>{{ key }}:</strong> {{ task.variables[key] }}
+          </li>
+        </ul>
+      </div>
+
+      <div *ngIf="!task.variables || Object.keys(task.variables).length === 0" class="text-muted mt-3">
+        Aucune variable disponible pour ce processus.
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagramme BPMN -->
+  <div *ngIf="hasDiagram" class="mt-5">
+    <h4 class="text-center">🗺️ Diagramme du processus</h4>
+    <div id="bpmnCanvas" style="height: 400px; border: 1px solid #ddd;" class="rounded shadow-sm"></div>
+  </div>
+
+  <!-- Chart état -->
+  <div class="mt-5">
+    <h4 class="text-center">📊 État du processus</h4>
+    <canvas id="etatChart" width="400" height="300" class="mx-auto d-block"></canvas>
+  </div>
+</div>
+
+<div *ngIf="loading" class="text-center mt-5">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Chargement...</span>
+  </div>
+</div>
+
+<div *ngIf="!loading && !task" class="alert alert-warning mt-5 text-center">
+  Aucun processus trouvé avec cet ID.
+</div>

@@ -1,0 +1,288 @@
+<div id="hero">
+
+  <!-- Notification Toast -->
+<div
+  *ngIf="notification.message"
+  class="notification-toast"
+  [ngClass]="{
+    'toast-success': notification.type === 'success',
+    'toast-error': notification.type === 'error',
+    'show': notification.message !== ''
+  }"
+  role="alert"
+  aria-live="assertive"
+  aria-atomic="true"
+>
+  <div class="toast-message">{{ notification.message }}</div>
+  <button class="toast-close-btn" aria-label="Close" (click)="clearNotification()">×</button>
+</div>
+
+
+
+  <!-- Bouton Retour fixé en haut à gauche -->
+  <button
+  class="btn btn-warning fw-bold px-4"
+  (click)="goBack()"
+  style="position: fixed; top: 20px; left: 20px; z-index: 1050;"
+>
+  ← Retour
+</button>
+
+
+  <div class="background-blur"></div>
+
+  <div
+    class="container py-9 d-flex flex-wrap justify-content-center"
+    style="max-width: 700px; gap: 2rem;"
+  >
+    <!-- Formulaire -->
+    <form
+      *ngIf="!showPreview"
+      (ngSubmit)="onSubmit()"
+      #candidatureForm="ngForm"
+      enctype="multipart/form-data"
+      novalidate
+      style="
+        flex: 1 1 300px;
+        min-width: 380px;
+        max-width: 100%;
+        max-height: 700px;
+        overflow-y: auto;
+        background: #fff;
+        padding: 2rem;
+        border-radius: 0;
+        box-shadow: 0 8px 24px rgb(0 0 0 / 0.2);
+        backdrop-filter: blur(5px);
+        display: flex;
+        flex-direction: column;
+      "
+    >
+      <h3 class="mb-4 text-center fw-bold text-dark">
+        <i class="fas fa-file-alt me-2 text-primary"></i>Formulaire de Candidature
+      </h3>
+
+      <!-- Notification -->
+      <!-- Notification -->
+<!-- Notification Toast -->
+
+
+      <!-- Téléphone -->
+      <div class="mb-4">
+        <label for="telephone" class="form-label fw-semibold">📞 Téléphone <span class="text-danger">*</span></label>
+        <input
+          type="tel"
+          id="telephone"
+          name="telephone"
+          class="form-control rounded-0"
+          [(ngModel)]="candidature.telephone"
+          required
+          pattern="^\d{8}$"
+          placeholder="12345678"
+          #telephone="ngModel"
+        />
+        <div *ngIf="(candidatureForm.submitted || telephone.touched) && telephone.errors" class="form-text text-danger">
+          <div *ngIf="telephone.errors['required']">Le téléphone est obligatoire.</div>
+          <div *ngIf="telephone.errors['pattern']">Le téléphone doit contenir exactement 8 chiffres.</div>
+        </div>
+      </div>
+
+      <!-- CV -->
+      <div class="mb-4">
+        <label for="cv" class="form-label fw-semibold">📎 CV (PDF ou DOC) <span class="text-danger">*</span></label>
+        <input
+          type="file"
+          id="cv"
+          name="cv"
+          class="form-control rounded-0"
+          (change)="onFileChange($event, 'cv')"
+          accept=".pdf,.doc,.docx"
+          required
+        />
+        <div *ngIf="cvError" class="form-text text-danger">{{ cvError }}</div>
+      </div>
+
+      <!-- Lettre de motivation -->
+      <div class="mb-4">
+        <label for="lettreMotivation" class="form-label fw-semibold">✉️ Lettre de motivation (PDF ou DOC) <span class="text-danger">*</span></label>
+        <input
+          type="file"
+          id="lettreMotivation"
+          name="lettreMotivation"
+          class="form-control rounded-0"
+          (change)="onFileChange($event, 'lettreMotivation')"
+          accept=".pdf,.doc,.docx"
+          required
+        />
+        <div *ngIf="lettreMotivationError" class="form-text text-danger">{{ lettreMotivationError }}</div>
+      </div>
+
+      <!-- Photo de Profil -->
+      <div class="mb-4">
+        <label for="imageProfil" class="form-label fw-semibold">🖼️ Photo de Profil (JPEG/PNG)</label>
+        <input
+          type="file"
+          id="imageProfil"
+          name="imageProfil"
+          class="form-control rounded-0"
+          (change)="onFileChange($event, 'imageProfil')"
+          accept="image/jpeg,image/png"
+        />
+        <div *ngIf="imageError" class="form-text text-danger">{{ imageError }}</div>
+
+        <div *ngIf="imagePreviewUrl" class="mt-3 text-center">
+          <img
+            [src]="imagePreviewUrl"
+            alt="Aperçu de la photo de profil"
+            style="
+              max-width: 150px;
+              max-height: 150px;
+              object-fit: contain;
+              border-radius: 0.5rem;
+              box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+            "
+          />
+        </div>
+      </div>
+
+      <div class="mt-auto">
+        <button
+          type="button"
+          class="btn btn-info w-100 fw-bold py-2 mb-3"
+          (click)="togglePreview(candidatureForm)"
+        >
+          👁️ Aperçu avant envoi
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary w-100 fw-bold py-2"
+          [disabled]="!formIsValid(candidatureForm) || isLoading"
+        >
+          <span *ngIf="!isLoading">🚀 Envoyer la candidature</span>
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <span *ngIf="isLoading"> Envoi en cours...</span>
+        </button>
+      </div>
+    </form>
+
+    <!-- Aperçu -->
+    <div
+      *ngIf="showPreview"
+      style="
+        flex: 1 1 380px;
+        min-width: 320px;
+        max-width: 100%;
+        border-left: 1px solid #ddd;
+        padding: 2rem;
+        max-height: 700px;
+        overflow-y: auto;
+        background: #fff;
+        border-radius: 0;
+        box-shadow: 0 8px 24px rgb(0 0 0 / 0.2);
+        backdrop-filter: blur(5px);
+      "
+    >
+      <h3 class="mb-4 fw-bold text-dark text-center">Modifier votre candidature</h3>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">📞 Téléphone</label>
+        <input
+          type="tel"
+          class="form-control rounded-0"
+          [(ngModel)]="candidature.telephone"
+          required
+          pattern="^\\d{8}$"
+          placeholder="12345678"
+          name="previewTelephone"
+          #previewTelephone="ngModel"
+        />
+        <div *ngIf="previewTelephone.touched && previewTelephone.errors" class="form-text text-danger">
+          <div *ngIf="previewTelephone.errors['required']">Le téléphone est obligatoire.</div>
+          <div *ngIf="previewTelephone.errors['pattern']">Le téléphone doit contenir exactement 8 chiffres.</div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">📧 Email</label>
+        <input
+          type="email"
+          class="form-control rounded-0"
+          [(ngModel)]="candidature.email"
+          required
+          placeholder="exemple@domaine.com"
+          name="previewEmail"
+          #previewEmail="ngModel"
+        />
+        <div *ngIf="previewEmail.touched && previewEmail.errors" class="form-text text-danger">
+          <div *ngIf="previewEmail.errors['required']">L'email est obligatoire.</div>
+          <div *ngIf="previewEmail.errors['email']">Email invalide.</div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">📎 CV</label>
+        <p>{{ cvFile?.name || 'Aucun fichier sélectionné' }}</p>
+        <button class="btn btn-sm btn-secondary" (click)="editFile('cv')">Changer CV</button>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">✉️ Lettre de motivation</label>
+        <p>{{ lettreMotivationFile?.name || 'Aucun fichier sélectionné' }}</p>
+        <button class="btn btn-sm btn-secondary" (click)="editFile('lettreMotivation')">Changer Lettre</button>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">🖼️ Photo de Profil</label>
+        <p>{{ imageFile?.name || 'Aucun fichier sélectionné' }}</p>
+        <button class="btn btn-sm btn-secondary" (click)="editFile('imageProfil')">Changer Photo</button>
+      </div>
+
+      <button
+        class="btn btn-success w-100 fw-bold py-2 mb-2"
+        (click)="submitFromPreview()"
+        [disabled]="!candidature.telephone || !candidature.email || !cvFile || !lettreMotivationFile"
+      >
+        🚀 Envoyer la candidature
+      </button>
+      <button class="btn btn-outline-secondary w-100 fw-bold py-2" (click)="togglePreview()">
+        🔙 Retour au formulaire
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .form-control.rounded-0 {
+    border-radius: 0 !important;
+  }
+
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #hero > .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 767px) {
+    #hero > .container {
+      flex-direction: column !important;
+    }
+
+    form,
+    #hero > .container > div[style*='border-left'] {
+      max-width: 100% !important;
+      min-width: auto !important;
+      flex-basis: auto !important;
+      border-left: none !important;
+      padding: 1.5rem !important;
+      margin-bottom: 1rem;
+    }
+  }
+</style>

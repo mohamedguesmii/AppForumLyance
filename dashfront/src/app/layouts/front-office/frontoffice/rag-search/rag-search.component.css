@@ -1,0 +1,61 @@
+.search-container {
+  max-width: 600px;
+  margin: 1rem auto;
+  font-family: Arial, sans-serif;
+}
+
+.search-input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+input[type="text"] {
+  flex-grow: 1;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading {
+  font-style: italic;
+  color: gray;
+}
+
+.error {
+  color: red;
+  margin-bottom: 1rem;
+}
+
+.results ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.result-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.no-results {
+  font-style: italic;
+  color: gray;
+  margin-top: 1rem;
+}
+.card-title {
+  font-weight: 600;
+}
+
+.card-text {
+  white-space: pre-wrap;
+}

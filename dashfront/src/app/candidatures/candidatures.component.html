@@ -1,0 +1,403 @@
+<!-- CSS GLOBAL -->
+<style>
+ body, html {
+  margin: 0; padding: 0; height: 100%;
+}
+
+.page-background {
+  min-height: 100vh;
+  /* même image de fond que pour les événements */
+  background-image: url('assets/frontoffice/img/jj.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  /* overlay sombre + blur */
+  position: relative;
+  color: rgb(255, 255, 255);
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* Overlay sombre + flou sur tout le fond */
+.page-background::before {
+  content: "";
+  position: fixed; /* fixe derrière le contenu */
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.5); /* noir semi-transparent */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: -1;
+}
+
+.main-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Cartes candidatures transparentes et floutées */
+.candidature-card {
+background: linear-gradient(
+  135deg,
+  rgba(2, 97, 104, 0.612),
+  rgba(93, 10, 67, 0.4)
+);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 12px;
+  border: 1px solid rgb(248, 246, 246);
+  padding: 20px;
+  transition: background-color 0.3s ease;
+  color: rgb(0, 0, 0);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+
+.candidature-card:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.avatar-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.search-input {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  color: black;
+  width: 100%;
+}
+
+.search-input::placeholder {
+  color: black;
+}
+
+.pagination .page-link {
+  cursor: pointer;
+}
+
+.custom-title {
+  color: #ffffff !important;
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.custom-title span {
+  color: #fdffff !important;
+}
+
+#notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 9999;
+}
+
+/* Modal styles matching event modal with dark transparent background */
+.modal-content {
+  background-color: rgba(33, 37, 41, 0.9);
+  backdrop-filter: blur(5px);
+  border: 1px solid #666;
+  border-radius: 10px;
+  color: white;
+}
+
+.modal-header,
+.modal-footer {
+  border-color: #444;
+}
+
+.form-control,
+.form-select {
+  background-color: #444;
+  color: white;
+  border: 1px solid #777;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #fafeff;
+  box-shadow: 0 0 0 0.2rem rgba(13, 202, 240, 0.25);
+}
+
+</style>
+
+
+<!-- HTML PRINCIPAL -->
+<div class="page-background">
+  <div class="main-container">
+
+    <h2 class="mb-4 text-center custom-title">
+      💼 <span>Liste des Candidatures</span>
+    </h2>
+
+    <!-- Barre de recherche -->
+    <div class="mb-4 text-center">
+      <input
+        type="text"
+        class="form-control w-50 mx-auto shadow-sm search-input"
+        placeholder="🔍 Rechercher (téléphone, email, commentaires)"
+        [(ngModel)]="searchTerm"
+        (input)="applyFilter()"
+      />
+    </div>
+
+    <!-- Loader -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status" aria-hidden="true"></div>
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+
+    <!-- Message erreur -->
+    <div *ngIf="errorMsg" class="alert alert-danger" role="alert">
+      {{ errorMsg }}
+    </div>
+
+    <!-- Message vide -->
+    <div *ngIf="!loading && filteredCandidatures.length === 0" class="alert alert-info" role="alert">
+      Aucune candidature trouvée.
+    </div>
+
+    <!-- Liste des candidatures -->
+    <div
+      *ngFor="let c of pagedCandidatures; trackBy: trackByCandidatureId"
+      class="d-flex align-items-center justify-content-between shadow-sm mb-3 candidature-card"
+    >
+      <!-- Infos -->
+      <div class="d-flex flex-column flex-grow-1">
+        <div>
+          <strong>Téléphone:</strong> {{ c.telephone?.trim() || 'N/A' }} |
+          <strong>Email:</strong> {{ c.email?.trim() || 'N/A' }}
+        </div>
+
+        <div class="mt-1 d-flex align-items-center gap-2">
+          <strong>Statut:</strong>
+          <!-- Statut affiché en badge -->
+          <span [ngClass]="getBadgeClass(c.statut)">
+            {{ c.statut || 'N/A' }}
+          </span>
+
+          <!-- Select pour changer le statut -->
+          <select
+            class="form-select form-select-sm w-auto"
+            [(ngModel)]="c.statut"
+            (change)="changerStatutEtEnvoyerEmail(c)"
+          >
+            <option *ngFor="let s of statuts" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+
+       <div *ngIf="c.titreOffre && c.titreOffre.trim() !== ''">
+  <strong>Offre :</strong> {{ c.titreOffre }}
+</div>
+<div *ngIf="c.typeOffre && c.typeOffre.trim() !== ''">
+  <strong>Type :</strong> {{ c.typeOffre }}
+</div>
+
+
+
+
+
+        <div *ngIf="c.commentairesRecruteur" class="mt-1 text-muted">
+          <small><em>Commentaires:</em> {{ c.commentairesRecruteur }}</small>
+        </div>
+
+        <div class="mt-1">
+          <small>Date candidature: {{ c.dateCandidature ? (c.dateCandidature | date : 'short') : 'N/A' }}</small>
+        </div>
+
+        <div class="mt-2">
+          <strong>📄 CV :</strong>
+          <a
+            *ngIf="c.cvUrl"
+            [href]="getDownloadUrl(c.cvUrl)"
+            download
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-decoration-underline text-success"
+          >
+            Télécharger le CV
+          </a>
+          <span *ngIf="!c.cvUrl">N/A</span>
+        </div>
+
+        <div class="mt-1">
+          <strong>✉️ Lettre de motivation :</strong>
+          <a
+            *ngIf="c.lettreMotivation"
+            [href]="getDownloadUrl(c.lettreMotivation)"
+            download
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-decoration-underline text-success"
+          >
+            Télécharger la lettre
+          </a>
+          <span *ngIf="!c.lettreMotivation">N/A</span>
+        </div>
+      </div>
+
+      <!-- Avatar -->
+      <div class="ms-3 text-center" style="width: 100px; height: 100px;">
+        <img
+          [src]="c.fullImageUrl"
+          alt="Photo de profil"
+          class="rounded-circle avatar-img"
+          (error)="onImageError($event)"
+        />
+      </div>
+
+      <!-- Actions -->
+      <div class="d-flex flex-column align-items-center ms-3 gap-2">
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-sm"
+          (click)="modifierCandidature(c)"
+          title="Modifier cette candidature"
+        >
+          ✏️
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm"
+          [disabled]="!c.email"
+          (click)="envoyerEmail(c.email)"
+          title="Envoyer un mail"
+        >
+          📩
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-danger btn-sm"
+          (click)="supprimerCandidature(c.id)"
+          title="Supprimer cette candidature"
+        >
+          🗑️
+        </button>
+      </div>
+    </div>
+
+
+    <div
+  id="notification"
+  style="
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+  "
+>
+  Email envoyé avec succès !
+</div>
+
+    <!-- Pagination -->
+  <nav>
+  <ul class="pagination">
+    <li class="page-item" [class.disabled]="page === 1">
+      <button class="page-link" (click)="changePage(page - 1)" [disabled]="page === 1">Précédent</button>
+    </li>
+    <li
+      class="page-item"
+      *ngFor="let p of [].constructor(totalPages); let i = index; trackBy: trackByPageIndex"
+      [class.active]="page === i + 1"
+    >
+      <button class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</button>
+    </li>
+    <li class="page-item" [class.disabled]="page === totalPages">
+      <button class="page-link" (click)="changePage(page + 1)" [disabled]="page === totalPages">Suivant</button>
+    </li>
+  </ul>
+</nav>
+
+  </div>
+</div>
+
+<!-- MODAL DE MODIFICATION -->
+<!-- MODAL DE MODIFICATION -->
+<div
+  class="modal d-block"
+  tabindex="-1"
+  role="dialog"
+  *ngIf="modalModifierVisible"
+  style="background-color: rgba(0,0,0,0.5);"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form #modifForm="ngForm" (ngSubmit)="soumettreModification()">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modifierModalLabel">Modifier Candidature</h5>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Fermer"
+            (click)="fermerModal()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              [(ngModel)]="selectedCandidature.email"
+              name="email"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Téléphone</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedCandidature.telephone"
+              name="telephone"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Statut</label>
+            <select
+              class="form-select"
+              [(ngModel)]="selectedCandidature.statut"
+              name="statut"
+              required
+            >
+              <option *ngFor="let s of statuts" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">💾 Enregistrer</button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="fermerModal()"
+          >
+            Annuler
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

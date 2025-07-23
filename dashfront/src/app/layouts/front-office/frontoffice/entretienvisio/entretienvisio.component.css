@@ -1,0 +1,146 @@
+.visio-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border-radius: 0 !important;
+  border: 2px solid #000000;
+  max-width: 600px;
+  width: 80%;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-top: 6px;
+  padding: 1.5rem 1.2rem;    /* un peu moins que 2rem */
+  min-height: 650px;         /* tu peux augmenter si besoin */
+}
+
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  background-image: url('assets/frontoffice/img/jj.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 5px 10px 10px 10px;
+}
+
+.logo-lyance-container {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.logo-lyance-container img {
+  max-width: 150px;
+  height: auto;
+  user-select: none;
+}
+
+header.visio-header {
+  margin-bottom: 4px;  /* un poil moins */
+}
+
+header.visio-header h1 {
+  font-size: 1.5rem;   /* légèrement plus petit */
+  margin-bottom: 0.1rem;
+  color: #8f03b1;
+}
+
+header.visio-header p {
+  margin-bottom: 0;
+  font-size: 0.75rem;
+  color: #ddd;
+  line-height: 1.2;
+}
+
+.candidate-info {
+  margin-bottom: 8px;
+  gap: 6px;
+}
+
+.candidate-info img {
+  width: 65px;
+  height: 65px;
+}
+
+.candidate-details h2 {
+  font-size: 0.95rem;
+  margin-bottom: 0.1rem;
+  color: #e5ebea;
+}
+
+.candidate-details p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #000000;
+}
+
+.status-timer {
+  margin-bottom: 6px;
+}
+
+.status-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.countdown {
+  font-weight: 600;
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
+
+.visio-action {
+  margin-bottom: 6px;
+}
+
+.btn-pink {
+  background-color: #000;
+  color: #fff;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.85rem;
+  border-radius: 4px;
+}
+
+.btn-pink:hover, 
+.btn-pink:focus {
+  background-color: #222;
+  color: #fff;
+  text-decoration: none;
+  transform: scale(1.03);
+  box-shadow: 0 3px 10px rgba(201, 30, 99, 0.6);
+}
+
+.info-pratique {
+  font-size: 0.65rem;
+  color: #ccc;
+  margin-bottom: 0;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.info-pratique p {
+  margin: 2px 0;
+}
+.btn-visio-gradient {
+  background: linear-gradient(135deg, #ff4e8e, #6c63ff);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 1.8rem;
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.btn-visio-gradient:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(255, 78, 142, 0.4);
+  background: linear-gradient(135deg, #ff2a7e, #594bff);
+}

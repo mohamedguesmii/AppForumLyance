@@ -1,0 +1,1319 @@
+
+<style>
+  /* Header fixé avec image de fond */
+  #header {
+    margin: 0;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+  }
+
+
+/* Au départ, on masque toute la barre details */
+.speaker .details {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  position: absolute; /* pour superposer sur l'image */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 15px;
+  border-radius: 0 0 10px 10px;
+}
+
+
+/* hedha elli ena zedtou bech ngued el barre title matbanech 
+/* La carte .speaker doit avoir position relative pour que .details position absolute fonctionne */
+.speaker {
+  position: relative;
+  overflow: hidden;
+}
+/* hedha elli ena zedtou bech ngued el barre title matbanech teba3 elli foukou
+/* Au survol de la carte, afficher la barre details */
+.speaker:hover .details {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+
+
+  
+
+  /* Container stylisé */
+  .container-xxl {
+   background: linear-gradient(90deg, 
+    rgba(0, 0, 0, 0.6) 0%,       /* noir à gauche */
+    rgba(4, 120, 197, 0.6) 50%,  /* bleu au milieu */
+    rgba(0, 0, 0, 0.6) 100%      /* noir à droite */
+);
+
+    border-radius: 12px !important;
+    box-shadow: 0 4px 15px rgba(1, 72, 75, 0.3);
+    padding: 0.2rem 1rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1300px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* Logo à gauche */
+  #logo {
+    display: flex;
+    align-items: center;
+  }
+
+  #logo img {
+    width: 120px;
+    height: auto;
+    display: block;
+  }
+
+  /* Centre (menu + bouton) */
+  .center-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    gap: 1rem;
+  }
+
+  /* Navbar */
+  #navbar {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #navbar ul {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+    gap: 0.6rem;
+  }
+
+  #navbar ul li a {
+    color: white;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    transition: color 0.3s ease;
+  }
+
+  #navbar ul li a:hover,
+  #navbar ul li a.active {
+    color: #ff4b1f;
+  }
+
+  /* Icône utilisateur alignée à droite dans le container */
+  .user-icon-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative; /* pour dropdown */
+    margin-left: 1rem;
+    cursor: pointer;
+    min-width: 40px;
+  }
+
+  .user-icon-wrapper button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+
+  .user-icon-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .user-menu-dropdown {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    width: 180px;
+     background: linear-gradient(45deg, #033e3d, #0380b1);
+    border: 1px solid #0ba492;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(2, 168, 138, 0.1);
+    z-index: 1000;
+  }
+
+  .user-menu-dropdown .header {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #bef8f5;
+  }
+
+  .user-menu-dropdown .header p {
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .user-menu-dropdown .header small {
+    color: #000000;
+  }
+
+  .user-menu-dropdown button.logout-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    color: #07be9c;
+  }
+
+  .user-menu-dropdown button.logout-btn:hover {
+    background-color: #06758e;
+    color: #010708;
+  }
+
+  /* Responsive */
+  @media (max-width: 991px) {
+    #navbar {
+      display: none !important;
+    }
+  }
+</style>
+
+
+
+<header id="header" class="d-flex align-items-center">
+
+  <div *ngIf="notificationMessage"
+     [ngClass]="{'notification-success': notificationType === 'success', 'notification-error': notificationType === 'error'}"
+     class="notification-toast">
+     {{ notificationMessage }}
+  </div>
+
+  <div class="container-fluid container-xxl d-flex align-items-center">
+
+    <!-- Logo à gauche -->
+    <div id="logo" class="me-auto">
+      <a href="index.html" class="scrollto">
+        <img src="assets/frontoffice/img/Logo_Lyance.png" alt="Logo Lyance" title="Lyance" />
+      </a>
+    </div>
+
+    <!-- Centre (menu + bouton) -->
+    <div class="center-block">
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+          <li><a class="nav-link scrollto" href="#about">About</a></li>
+          <li><a class="nav-link scrollto" href="#speakers">Événement</a></li>
+          <li><a class="nav-link scrollto" href="#venue">Actualité</a></li>
+          <li><a class="nav-link scrollto" href="#supporters">Candidature</a></li>
+          <li><a class="nav-link scrollto" href="#schedule">Rendez-Vous</a></li>
+          <li><a class="nav-link scrollto" href="#hotels">A Venir</a></li>
+          <li><a class="nav-link scrollto" href="#gallery">Blog</a></li>
+          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Bouton Sign In (visible si pas connecté) -->
+      <button *ngIf="!isLoggedIn" class="buy-tickets scrollto" [routerLink]="['/front/login']">
+        Sign In
+      </button>
+
+      
+    </div>
+
+   <!-- Icône utilisateur (visible si connecté) -->
+<div
+  *ngIf="isLoggedIn"
+  class="user-icon-wrapper"
+  tabindex="0"
+  (click)="toggleMenu()"
+  (blur)="closeMenuOnBlur($event)"
+  aria-haspopup="true"
+  [attr.aria-expanded]="menuOpen"
+  role="button"
+  aria-label="User menu"
+>
+  <button type="button" class="p-0" aria-label="User menu toggle">
+    <img
+      src="/assets/avatar.jpg"
+      alt="Avatar"
+      class="img-fluid"
+      style="width: 100%; height: 100%; object-fit: cover;"
+    />
+  </button>
+
+  <div *ngIf="menuOpen" class="user-menu-dropdown" (mousedown)="$event.preventDefault()">
+    <div class="p-2 border-bottom">
+      <p class="mb-0 font-weight-bold" style="color: rgb(229, 237, 234);">
+        {{ loggedInUserName }}
+      </p>
+      <small style="color: #002fff;">{{ userRole }}</small>
+    </div>
+    <button (click)="onLogout()" class="logout-btn" aria-label="Logout" type="button">
+      Déconnexion
+    </button>
+  </div>
+</div>
+
+
+  </div>
+</header>
+
+
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero">
+    <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
+      <h1 class="mb-4 pb-0">
+        PLATEFORME DE <br>
+        <span class="gestion-forum"> GESTION DES FORUMS </span> D’ENTREPRISES
+      </h1>
+
+      <p class="mb-4 pb-0">
+        <img src="assets/frontoffice/img/Logo_Lyance.png" alt="Esprit Logo" style="width: 150px; height: auto;">
+      </p>
+
+      <a href="https://www.youtube.com/watch?v=oQK87ZJmLD4" class="glightbox play-btn mb-4" ></a>
+      <a href="#about" class="about-btn scrollto">About The Platform</a>
+    </div>
+
+    
+</section> <!-- End Hero Section -->
+
+  <main id="main">
+
+    <!-- ======= About Section ======= -->
+    <section id="about">
+      <div class="container position-relative" data-aos="fade-up">
+        <div class="row">
+          <div class="col-lg-6">
+            <h2> À propos Notre plateforme </h2>
+            <p>Cette plateforme offrira un espace virtuel dynamique, favorisant la collaboration, le partage d'informations et le réseautage entre les acteurs de l'entreprise.</p>
+          </div>
+          <!--
+          <div class="col-lg-3">
+            <h3>Where</h3>
+            <p>1, 2 rue André Ampère - 2083 - Pôle Technologique - El Ghazala.</p>
+          </div>
+          <div class="col-lg-3">
+            <h3>When</h3>
+            <p>Monday to Wednesday<br>10-12 December</p>
+          </div>
+          -->
+        </div>
+      </div>
+    </section><!-- End About Section -->
+    
+
+
+
+                          <!-- End About Section -->
+
+<!-- ======= Speakers Section ======= -->
+   <section id="speakers" style="background-color: white;">
+  <div class="container" data-aos="fade-up">
+    <div class="section-header">
+      <h2>NOS EVENEMENTS</h2>
+      <p>Voici quelques-uns de nos evenements </p>
+    </div>
+
+
+        <div class="row g-0">
+          <div class="col-lg-6 col-md-12">
+        <div class="venue-map">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621"
+            frameborder="0"
+            style="width: 100%; height: 200px; border: 0;"
+            allowfullscreen=""
+          ></iframe>
+        </div>
+      </div>
+
+          <div class="col-lg-6 venue-info">
+            <div class="row justify-content-center">
+              <div class="col-100 col-lg-100 position-relative">
+                <h3 style="color: black;">
+  📍 <strong>Tunis, Lac2 Avenue de la Bourse</strong>
+</h3>
+<p style="color: black;">
+  🚀 À travers ses forums, Lyance offre une opportunité unique aux candidats et aux partenaires pour échanger, recruter et collaborer.  
+ 
+</p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+       <div class="row">
+      <div *ngFor="let event of evenementsManuels; let i = index" class="col-lg-4 col-md-6">
+        <div class="speaker" data-aos="fade-up" [attr.data-aos-delay]="(100 * ((i % 3) + 1))">
+          <img [src]="event.imageUrl" [alt]="event.title" class="img-fluid" />
+          <div class="details">
+            <h3><a href="speaker-details.html">{{ event.title }}</a></h3>
+            <p>{{ event.description }}</p>
+
+            <div class="social mb-2">
+              <a href="#" class="me-2 text-decoration-none"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="me-2 text-decoration-none"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="me-2 text-decoration-none"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="me-2 text-decoration-none"><i class="bi bi-linkedin"></i></a>
+            </div>
+
+            <!-- ✅ Bouton Participer corrigé -->
+            <button class="btn btn-primary" (click)="allerVersReservation(event.idevent)">
+              Participer
+            </button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr style="border: 1px solid #000000; margin: 40px 0;" />
+
+
+
+
+  <button (click)="goToRecommendationPage()" 
+  style="background: none; border: none; color: #000000; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 6px;">
+  🔍 Voir recommandations
+</button>
+
+</section>
+
+
+
+<!-- ======= Supporters Section ======= -->
+  
+    <app-chatbot></app-chatbot>
+
+
+
+<!-- Bouton ou phrase cliquable -->
+
+
+
+    <!-- ======= Events Section ======= -->
+    <section id="venue">
+
+
+
+      <div class="container-fluid" data-aos="fade-up">
+
+        <div class="section-header">
+          <h2> ACTUALITES</h2>
+          <h3></h3>
+          <p><a [routerLink]="'/liste'">Listes des actualités</a> </p>
+        </div>
+          
+ <!--
+        <div class="row g-0">
+          <div class="col-lg-6 venue-map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameborder="0" style="border:0" allowfullscreen=""></iframe>
+          </div>
+
+          <div class="col-lg-6 venue-info">
+            <div class="row justify-content-center">
+              <div class="col-100 col-lg-100 position-relative">
+                <h3>Tunis center , Brado </h3>
+                <p>L'événement "Tunis Center Bardo" est une célébration culturelle et artistique qui se déroule au cœur de Tunis, en Tunisie, au prestigieux site du Bardo. Le Bardo est renommé pour son musée, qui abrite une collection impressionnante d'art et d'histoire tunisiens.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      -->
+
+
+        
+      </div>
+
+     <div class="container-fluid venue-gallery-container" data-aos="fade-up" data-aos-delay="100">
+  <div class="row actualites-section" data-aos="fade-up" data-aos-delay="100">
+    <div class="col-lg-4 col-md-6" *ngFor="let act of actualites">
+      <div class="hotel bg-white shadow-sm rounded">
+
+        <!-- Image simple sans icônes -->
+        <div class="hotel-img position-relative">
+          <img [src]="act.imageUrl" [alt]="act.actuality" class="img-fluid rounded-top" />
+        </div>
+
+        <!-- Titre -->
+        <h3 class="mt-2 px-3">
+          <a href="#" class="text-dark fw-bold text-decoration-none">{{ act.actuality }}</a>
+        </h3>
+
+        <!-- Étoiles -->
+        <div class="stars px-3 text-warning">
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star"></i>
+        </div>
+
+        <!-- Description -->
+        <p class="px-3">{{ act.description || 'Aucune description disponible.' }}</p>
+
+        <!-- Réseaux sociaux -->
+        <div class="px-3 mb-2 d-flex gap-2">
+          <a href="#" class="text-primary"><i class="bi bi-facebook fs-5"></i></a>
+          <a href="#" class="text-info"><i class="bi bi-twitter fs-5"></i></a>
+          <a href="#" class="text-danger"><i class="bi bi-instagram fs-5"></i></a>
+          <a href="#" class="text-primary"><i class="bi bi-linkedin fs-5"></i></a>
+        </div>
+
+      <!-- Like / Dislike avec icônes et état actif -->
+<!-- Like / Dislike avec couleurs dynamiques -->
+<div class="actions mb-2 px-3 d-flex align-items-center">
+  <!-- Bouton J'aime -->
+  <button
+  [class.btn-like-active]="act.userReaction === true"
+  [class.btn-outline-success]="act.userReaction !== true"
+  (click)="likeActualite(act.idActualite)">
+  <i class="bi bi-hand-thumbs-up-fill me-1"></i> J’aime ({{ act.likes || 0 }})
+  </button>
+
+ <button
+  [class.btn-dislike-active]="act.userReaction === false"
+  [class.btn-outline-danger]="act.userReaction !== false"
+  (click)="dislikeActualite(act.idActualite)">
+  <i class="bi bi-hand-thumbs-down-fill me-1"></i> Je n’aime pas ({{ act.dislikes || 0 }})
+ </button>
+
+</div>
+
+
+
+
+
+
+     <style>
+
+/* Bouton Like actif : fond vert foncé, texte blanc */
+.btn-like-active {
+  background-color: #2f7a27 !important; /* vert foncé */
+  color: white !important;
+  border-color: #2f7a27 !important;
+}
+
+/* Bouton Dislike actif : fond rouge foncé, texte blanc */
+.btn-dislike-active {
+  background-color: #a71d2a !important; /* rouge foncé */
+  color: white !important;
+  border-color: #a71d2a !important;
+}
+
+  .comment-wrapper {
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px;
+  }
+
+  .comment-input {
+    margin-bottom: 8px;
+  }
+
+  /* On cache complètement le résumé */
+  .comment-summary {
+    display: none;
+  }
+
+  /* Popup commentaires complets, caché par défaut */
+  .comment-popup {
+    position: absolute;
+    top: 100%; /* juste en dessous */
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 100;
+    display: none;
+  }
+
+  /* Affiche la popup au survol de la zone entière */
+  .comment-wrapper:hover .comment-popup {
+    display: block;
+  }
+</style>
+
+<div class="cm px-3 pb-3 mb-3 position-relative comment-wrapper">
+
+  <!-- Input pour ajouter un commentaire -->
+  <input
+    [(ngModel)]="commentaire"
+    (keyup.enter)="addComment(act.idActualite)"
+    class="form-control form-control-sm comment-input"
+    placeholder="Ajouter un commentaire..."
+  />
+
+  <!-- Résumé caché -->
+  <div class="comment-summary">
+    <!-- vide -->
+  </div>
+
+  <!-- Popup affichant TOUS les commentaires au survol -->
+    <div class="comment-popup">
+    <div *ngFor="let com of act.commentaire" class="comment mb-2">
+      <strong>{{ com.username || 'Anonyme' }}:</strong> {{ com.contenu }}
+      <div style="font-size: 0.7rem; color: gray;">{{ com.date | date:'short' }}</div>
+    </div>
+    </div>
+
+  </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr style="border: 1px solid #000000; margin: 40px 0;" />
+
+<!--
+
+        <div class="section-header">
+          <h2> LES EVENEMENTS A VENIR  </h2>
+          <h3></h3>
+<p>
+  <a 
+    [routerLink]="'/liste'" 
+    style="color: #011b37; font-size: 1.25rem; font-weight: 600; text-decoration: none;"
+    onmouseover="this.style.color='#0056b3'; this.style.textDecoration='underline';"
+    onmouseout="this.style.color='#007bff'; this.style.textDecoration='none';"
+  >
+    Listes des événements à venir
+  </a>
+</p>
+        </div>
+<div class="row actualites-section gx-5 gy-5 px-3" data-aos="fade-up" data-aos-delay="100">
+  <div class="col-lg-4 col-md-6 px-2 mb-4" *ngFor="let event of evenementsScrapes">
+    <div class="hotel bg-white shadow-sm rounded">
+      <div class="hotel-img position-relative">
+        <img [src]="event.imageUrl || 'assets/default-event.jpg'" 
+             [alt]="event.title || 'Événement'" 
+             class="img-fluid rounded-top" />
+
+        <div class="overlay-content text-white">
+          <h5 class="fw-bold mb-2">{{ event.title }}</h5>
+          <p>
+            Du {{ event.datedebut | date: 'dd/MM/yyyy' }} 
+            au {{ event.datefin | date: 'dd/MM/yyyy' }}
+          </p>
+          <button class="btn btn-primary" (click)="allerVersReservation(event.idevent)">Participer</button>
+        </div>
+      </div>
+
+      <div class="actions mb-2 px-3 d-flex align-items-center justify-content-center gap-2 mt-2">
+        <button
+          class="btn"
+          [class.btn-like-active]="event.userReaction === true"
+          [class.btn-outline-success]="event.userReaction !== true"
+          (click)="likeActualite(event.idevent)">
+          <i class="bi bi-hand-thumbs-up-fill me-1"></i> J’aime ({{ event.likes || 0 }})
+        </button>
+
+        <button
+          class="btn"
+          [class.btn-dislike-active]="event.userReaction === false"
+          [class.btn-outline-danger]="event.userReaction !== false"
+          (click)="dislikeActualite(event.idevent)">
+          <i class="bi bi-hand-thumbs-down-fill me-1"></i> Je n’aime pas ({{ event.dislikes || 0 }})
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr style="border: 1px solid #000000; margin: 40px 0;" />
+
+
+
+        <div class="section-header">
+          <h2> </h2>
+          <h3></h3>
+          <p><a [routerLink]="'/liste'">Les Impressions</a> </p>
+        </div>
+
+
+
+        <hr style="border: 1px solid #000000; margin: 40px 0;" />
+      -->
+
+    </section><!-- End Venue Section -->
+
+
+
+
+
+
+
+    <section id="supporters" class="section-with-bg">
+      
+
+    <div class="container" data-aos="fade-up">
+      <div class="section-header">
+        <h2>CANDIDATURE</h2>
+      </div>
+
+      <div class="row no-gutters supporters-wrap clearfix" data-aos="zoom-in" data-aos-delay="100">
+                            <app-candidature></app-candidature>
+
+        <div class="col-lg-3 col-md-4 col-xs-6">
+          <div class="supporter-logo">
+            <img src="assets/frontoffice/img/supporters/sopra.png" class="img-fluid" alt="">
+          </div>
+        </div>
+
+      
+
+        <div class="col-lg-3 col-md-4 col-xs-6">
+          <div class="supporter-logo">
+            <img src="assets/frontoffice/img/supporters/actia.png" class="img-fluid" alt="">
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-xs-6">
+          <div class="supporter-logo">
+            <img src="assets/frontoffice/img/supporters/inetum.png" class="img-fluid" alt="">
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-xs-6">
+          <div class="supporter-logo">
+            <img src="assets/frontoffice/img/supporters/esprit.jpg" class="img-fluid" alt="">
+          </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-4 col-xs-6">
+          <div class="supporter-logo">
+            <img src="assets/frontoffice/img/supporters/ey.png" class="img-fluid" alt="">
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-xs-6">
+          <div class="supporter-logo">
+            <img src="assets/frontoffice/img/supporters/sofrecom.png" class="img-fluid" alt="">
+          </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-4 col-xs-6">
+          <div class="supporter-logo">
+            <img src="assets/frontoffice/img/supporters/lyance.png" class="img-fluid" alt="">
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-xs-6">
+          <div class="supporter-logo">
+            <img src="assets/frontoffice/img/supporters/thinkit.png" class="img-fluid" alt="">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+      <hr style="border: 1px solid #000000; margin: 40px 0;" />
+
+  </section><!-- End Sponsors Section -->
+
+
+
+
+<!-- ======= Schedule Section ======= -->
+    <section id="schedule" class="section-with-bg">
+      <div class="container" data-aos="fade-up">
+        <div class="section-header">
+          <h2>RENDEZ-VOUS</h2>
+          <p>Voici notre planing</p>
+        </div>
+
+       
+
+        <ul class="nav nav-tabs" role="tablist" data-aos="fade-up" data-aos-delay="100">
+          <li class="nav-item">
+            <a class="nav-link active" href="#day-1" role="tab" data-bs-toggle="tab">Day 1</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#day-2" role="tab" data-bs-toggle="tab">Day 2</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#day-3" role="tab" data-bs-toggle="tab">Day 3</a>
+          </li>
+        </ul>
+
+        <h3 class="sub-heading">Bonjour a tous ! Voici le planning </h3>
+
+        <div class="tab-content row justify-content-center" data-aos="fade-up" data-aos-delay="200">
+
+          <!-- Schdule Day 1 -->
+          <div role="tabpanel" class="col-lg-9 tab-pane fade show active" id="day-1">
+
+
+              <h3 class="mb-4"></h3>
+
+            <div class="row schedule-item">
+              <div class="col-md-2"><time></time></div>
+              <div class="col-md-10">
+                <h4>📅 Rendez-vous Planifiés</h4>
+                <p>Bienvenue a tous !</p>
+              </div>
+            </div>
+
+            <app-rendezz-vous></app-rendezz-vous>
+            <!-- Affichage dynamique des rendez-vous avec mêmes classes
+
+
+            <div class="row schedule-item">
+              <div class="col-md-2"><time>11:00 AM</time></div>
+              <div class="col-md-10">
+                <div class="speaker">
+                  <img src="assets/frontoffice/img/speakers/2.jpg" alt="Hubert Hirthe">
+                </div>
+                <h4>entretien et conversation<span>Bil gates</span></h4>
+                <p>inspiration totale </p>
+              </div>
+            </div>
+
+            <div class="row schedule-item">
+              <div class="col-md-2"><time>12:00 AM</time></div>
+              <div class="col-md-10">
+                <div class="speaker">
+                  <img src="assets/frontoffice/img/speakers/3.jpg" alt="Cole Emmerich">
+                </div>
+                <h4>Explication Developement <span>younes</span></h4>
+                <p>infras et discussion</p>
+              </div>
+            </div>
+
+            <div class="row schedule-item">
+              <div class="col-md-2"><time>02:00 PM</time></div>
+              <div class="col-md-10">
+                <div class="speaker">
+                  <img src="assets/frontoffice/img/speakers/4.jpg" alt="Jack Christiansen">
+                </div>
+                <h4>Intergation projets <span>Jack Christiansen</span></h4>
+                <p>Developement web </p>
+              </div>
+            </div>
+
+            <div class="row schedule-item">
+              <div class="col-md-2"><time>03:00 PM</time></div>
+              <div class="col-md-10">
+                <div class="speaker">
+                  <img src="assets/frontoffice/img/speakers/5.jpg" alt="Alejandrin Littel">
+                </div>
+                <h4>entrepreneuriat <span>ines channoufi</span></h4>
+                <p>acceptaion projets </p>
+              </div>
+            </div>
+
+            <div class="row schedule-item">
+              <div class="col-md-2"><time>04:00 PM</time></div>
+              <div class="col-md-10">
+                <div class="speaker">
+                  <img src="assets/frontoffice/img/speakers/6.jpg" alt="Willow Trantow">
+                </div>
+                <h4>buffet <span>chef wassim</span></h4>
+                <p>restaurat et digusation</p>
+              </div>
+            </div>
+ -->
+
+          </div>
+          <!-- End Schdule Day 1 -->
+
+          <!-- Schdule Day 2 -->
+          <div role="tabpanel" class="col-lg-9  tab-pane fade" id="day-2">
+
+          </div>
+          <!-- End Schdule Day 2 -->
+
+          <!-- Schdule Day 3 -->
+          <div role="tabpanel" class="col-lg-9  tab-pane fade" id="day-3">
+
+          </div>
+          <!-- End Schdule Day 2 -->
+
+        </div>
+
+        
+              <hr style="border: 1px solid #000000; margin: 40px 0;" />
+
+        
+         <div class="row g-0">
+          <div class="col-lg-6 col-md-12">
+        <div class="venue-map">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621"
+            frameborder="0"
+            style="width: 100%; height: 200px; border: 0;"
+            allowfullscreen=""
+          ></iframe>
+        </div>
+      </div>
+
+          <div class="col-lg-6 venue-info">
+            <div class="row justify-content-center">
+              <div class="col-100 col-lg-100 position-relative">
+                <h3 style="color: black;">
+  📍 <strong>Tunis, Lac2 Avenue de la Bourse</strong>
+</h3>
+<p style="color: black;">
+  🚀 Les actualités Lyance reflètent l’énergie de nos forums : rencontres, opportunités, et collaborations durables. 
+</p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+
+      
+      <hr style="border: 1px solid #000000; margin: 40px 0;" />
+
+
+    </section><!-- End Schedule Section -->
+
+    
+
+
+
+
+
+
+
+
+
+    
+    
+    <!-- ======= Hotels Section ======= -->
+    <section id="hotels" class="section-with-bg">
+
+      <div class="container" data-aos="fade-up">
+        <div class="section-header">
+          <h2>A Venir  </h2>
+          <p> 
+            
+            <a 
+               [routerLink]="'/liste'" 
+    style="color: #011b37; font-size: 1.25rem; font-weight: 600; text-decoration: none;"
+    onmouseover="this.style.color='#0056b3'; this.style.textDecoration='underline';"
+    onmouseout="this.style.color='#007bff'; this.style.textDecoration='none';"
+          >  Listes des événements à venir
+          </a>
+          </p>
+        </div>
+  
+
+        </div>
+<div class="row actualites-section gx-5 gy-5 px-3" data-aos="fade-up" data-aos-delay="100">
+  <div class="col-lg-4 col-md-6 px-2 mb-4" *ngFor="let event of evenementsScrapes">
+    <div class="hotel bg-white shadow-sm rounded">
+      <div class="hotel-img position-relative">
+        <img [src]="event.imageUrl || 'assets/default-event.jpg'" 
+             [alt]="event.title || 'Événement'" 
+             class="img-fluid rounded-top" />
+
+        <!-- Contenu visible au survol -->
+        <div class="overlay-content text-white">
+          <h5 class="fw-bold mb-2">{{ event.title }}</h5>
+          <p>
+            Du {{ event.datedebut | date: 'dd/MM/yyyy' }} 
+            au {{ event.datefin | date: 'dd/MM/yyyy' }}
+          </p>
+          <button class="btn btn-primary" (click)="allerVersReservation(event.idevent)">Participer</button>
+        </div>
+      </div>
+
+      <!-- Like / <div class="actions mb-2 px-3 d-flex align-items-center justify-content-center gap-2 mt-2">
+        <button
+          class="btn"
+          [class.btn-like-active]="event.userReaction === true"
+          [class.btn-outline-success]="event.userReaction !== true"
+          (click)="likeActualite(event.idevent)">
+          <i class="bi bi-hand-thumbs-up-fill me-1"></i> J’aime ({{ event.likes || 0 }})
+        </button>
+
+        <button
+          class="btn"
+          [class.btn-dislike-active]="event.userReaction === false"
+          [class.btn-outline-danger]="event.userReaction !== false"
+          (click)="dislikeActualite(event.idevent)">
+          <i class="bi bi-hand-thumbs-down-fill me-1"></i> Je n’aime pas ({{ event.dislikes || 0 }})
+        </button>
+      </div> -->
+      
+    </div>
+  </div>
+</div>
+    <hr style="border: 1px solid #000000; margin: 40px 0;" />
+
+    </section><!-- End Hotels Section -->
+
+
+
+    <!-- ======= Gallery Section ======= -->
+    <section id="gallery" class="section-with-bg">
+
+      <div class="container" data-aos="fade-up">
+        <div class="section-header">
+          <h2>Blog</h2>
+          <p>Explore our latest articles, insights, and updates.</p>
+        </div>
+                            <app-faq></app-faq>
+
+                            <app-rag-search></app-rag-search>
+
+
+
+      </div>
+      <div class="row">
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="card mb-5 mb-lg-0">
+              <div class="card-body">
+                <h5 class="card-title text-muted text-uppercase text-center">Silver Pack</h5>
+                <h6 class="card-price text-center">-- 500 dt</h6>
+                <hr>
+                <ul class="fa-ul">
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Regular Seating</li>
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Coffee Break</li>
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Custom Badge</li>
+                  <li class="text-muted"><span class="fa-li"><i class="fa fa-times"></i></span>Community Access</li>
+                  <li class="text-muted"><span class="fa-li"><i class="fa fa-times"></i></span>Workshop Access</li>
+                  <li class="text-muted"><span class="fa-li"><i class="fa fa-times"></i></span>After Party</li>
+                </ul>
+                <hr>
+                <div class="text-center">
+                  <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#buy-ticket-modal" data-ticket-type="standard-access">Buy Now</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="card mb-5 mb-lg-0">
+              <div class="card-body">
+                <h5 class="card-title text-muted text-uppercase text-center">Gold Pack</h5>
+                <h6 class="card-price text-center">500 dt -- 2000 dt</h6>
+                <hr>
+                <ul class="fa-ul">
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Regular Seating</li>
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Coffee Break</li>
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Custom Badge</li>
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Community Access</li>
+                  <li class="text-muted"><span class="fa-li"><i class="fa fa-times"></i></span>Workshop Access</li>
+                  <li class="text-muted"><span class="fa-li"><i class="fa fa-times"></i></span>After Party</li>
+                </ul>
+                <hr>
+                <div class="text-center">
+                  <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#buy-ticket-modal" data-ticket-type="pro-access">Buy Now</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Pro Tier -->
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title text-muted text-uppercase text-center">Platinum Pack</h5>
+                <h6 class="card-price text-center">2000 dt --</h6>
+                <hr>
+                <ul class="fa-ul">
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Regular Seating</li>
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Coffee Break</li>
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Custom Badge</li>
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Community Access</li>
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Workshop Access</li>
+                  <li><span class="fa-li"><i class="fa fa-check"></i></span>After Party</li>
+                </ul>
+                <hr>
+                <div class="text-center">
+                  <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#buy-ticket-modal" data-ticket-type="premium-access">Buy Now</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      
+
+          <hr style="border: 1px solid #000000; margin: 40px 0;" />
+
+    </section><!-- End Gallery Section -->
+
+    <!-- ======= Supporters Section ======= -->
+    <section id="supporters" class="section-with-bg">
+
+      <div class="container" data-aos="fade-up">
+        <div class="section-header">
+          <h2>Sponsors</h2>
+        </div>
+
+        
+        <div class="row no-gutters supporters-wrap clearfix" data-aos="zoom-in" data-aos-delay="100">
+
+          <div class="col-lg-3 col-md-4 col-xs-6">
+            <div class="supporter-logo">
+              <img src="assets/frontoffice/img/supporters/p4.png" class="img-fluid" alt="">
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4 col-xs-6">
+            <div class="supporter-logo">
+              <img src="assets/frontoffice/img/supporters/p1.jpg" class="img-fluid" alt="">
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4 col-xs-6">
+            <div class="supporter-logo">
+              <img src="assets/frontoffice/img/supporters/ey.png" class="img-fluid" alt="">
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4 col-xs-6">
+            <div class="supporter-logo">
+              <img src="assets/frontoffice/img/supporters/esprit.jpg" class="img-fluid" alt="">
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4 col-xs-6">
+            <div class="supporter-logo">
+              <img src="assets/frontoffice/img/supporters/5.png" class="img-fluid" alt="">
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4 col-xs-6">
+            <div class="supporter-logo">
+              <img src="assets/frontoffice/img/supporters/6.png" class="img-fluid" alt="">
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4 col-xs-6">
+            <div class="supporter-logo">
+              <img src="assets/frontoffice/img/supporters/7.png" class="img-fluid" alt="">
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4 col-xs-6">
+            <div class="supporter-logo">
+              <img src="assets/frontoffice/img/supporters/8.png" class="img-fluid" alt="">
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+          <hr style="border: 1px solid #000000; margin: 40px 0;" />
+
+    </section><!-- End Sponsors Section -->
+
+    <!-- =======  F.A.Q Section ======= -->
+    
+
+    <!-- ======= Subscribe Section ======= -->
+    <section id="subscribe">
+      <div class="container" data-aos="zoom-in">
+        <div class="section-header">
+          <h2>Newsletter</h2>
+          <p>Rerum numquam illum recusandae quia mollitia consequatur.</p>
+        </div>
+
+        <form method="POST" action="#">
+          <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-10 d-flex">
+              <input type="text" class="form-control" placeholder="Enter your Email">
+              <button type="submit" class="ms-2">Subscribe</button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+
+          <hr style="border: 1px solid #000000; margin: 40px 0;" />
+
+    </section><!-- End Subscribe Section -->
+
+    <!-- ======= Buy Ticket Section ======= -->
+    
+
+    <!-- ======= Contact Section ======= -->
+    <section id="contact" class="section-with-bg">
+
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-header">
+          <h2>Contact Us</h2>
+          
+        </div>
+
+        <div class="row contact-info">
+
+          <div class="col-md-4">
+            <div class="contact-address">
+              <i class="bi bi-geo-alt"></i>
+              <h3>Address</h3>
+              <address>1, 2 rue André Ampère - 2083 - Pôle Technologique - El Ghazala</address>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="contact-phone">
+              <i class="bi bi-phone"></i>
+              <h3>Phone Number</h3>
+              <p><a href="tel:+155895548855">+(216) 70 250 000</a></p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="contact-email">
+              <i class="bi bi-envelope"></i>
+              <h3>Email</h3>
+              <p><a href="mailto:info@example.com">https://www.lyance.com/contact/</a></p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="form">
+          <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+            <div class="row">
+              <div class="form-group col-md-6">
+                <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required="">
+              </div>
+              <div class="form-group col-md-6 mt-3 mt-md-0">
+                <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required="">
+              </div>
+            </div>
+            <div class="form-group mt-3">
+              <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required="">
+            </div>
+            <div class="form-group mt-3">
+              <textarea class="form-control" name="message" rows="5" placeholder="Message" required=""></textarea>
+            </div>
+            <div class="my-3">
+              <div class="loading">Loading</div>
+              <div class="error-message"></div>
+              <div class="sent-message">Your message has been sent. Thank you!</div>
+            </div>
+            <div class="text-center"><button type="submit">Send Message</button></div>
+          </form>
+        </div>
+
+
+      </div>
+
+          <hr style="border: 1px solid #000000; margin: 40px 0;" />
+
+    </section><!-- End Contact Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6 footer-info">
+            <img src="assets/frontoffice/img/Logo_Lyance copy.png" alt="TheEvenet">
+            <p>In alias aperiam. Placeat tempore facere. Officiis voluptate ipsam vel eveniet est dolor et totam porro. Perspiciatis ad omnis fugit molestiae recusandae possimus. Aut consectetur id quis. In inventore consequatur ad voluptate cupiditate debitis accusamus repellat cumque.</p>
+          </div>
+
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Home</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">About us</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Services</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Terms of service</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Privacy policy</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Home</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">About us</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Services</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Terms of service</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Privacy policy</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-3 col-md-6 footer-contact">
+            <h4>Contact Us</h4>
+            <p>
+              A108 Adam Street <br>
+              New York, NY 535022<br>
+              United States <br>
+              <strong>Phone:</strong> +1 5589 55488 55<br>
+              <strong>Email:</strong> infoLyance.com<br>
+            </p>
+
+            <div class="social-links">
+              <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="google-plus"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="copyright">
+        &copy; Copyright <strong>TheEvent</strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+        <!--
+        All the links in the footer should remain intact.
+        You can delete the links only if you purchased the pro version.
+        Licensing information: https://bootstrapmade.com/license/
+        Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=TheEvent
+      -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+      </div>
+    </div>
+        <hr style="border: 1px solid #000000; margin: 40px 0;" />
+
+  </footer><!-- End  Footer -->
+
+

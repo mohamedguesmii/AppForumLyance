@@ -1,0 +1,32 @@
+/* Fond doux pour la carte */
+.custom-gradient-card {
+  background: linear-gradient(135deg, #a9d5d5, rgb(196, 99, 157));
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Supprimer les bordures par défaut */
+.no-radius {
+  border-radius: 0;
+}
+
+
+
+
+
+/* Texte de section */
+.section-title p {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive padding (facultatif si Bootstrap déjà là) */
+.pd-top-110 {
+  padding-top: 110px;
+}
+
+.pd-bottom-120 {
+  padding-bottom: 120px;
+}
+

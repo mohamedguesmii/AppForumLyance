@@ -1,0 +1,148 @@
+
+
+<div class="page-background">
+
+
+
+
+
+  <div class="reserver-container" *ngIf="evenement; else loading">
+
+    <!-- Titre principal de la page -->
+    <h2 class="fw-bold" style="font-size: 2rem; color: #111111; text-align: center; margin-bottom: 1rem;">
+      👋 Bienvenue sur votre espace Reservation
+    </h2>
+
+
+
+    <!-- Recherche -->
+    <div class="mb-5 text-center">
+      <input
+        type="text"
+        class="form-control w-50 mx-auto shadow-sm"
+        placeholder="🔍 Rechercher par titre ou lieu..."
+        [(ngModel)]="searchTerm"
+        (input)="resetPagination()"
+      />
+    </div>
+
+    
+    <div class="content">
+      <!-- Infos à gauche -->
+      <div class="details">
+        <p><strong>Description :</strong> {{ evenement.description }}</p>
+        <p><strong>Adresse / Lieu :</strong> {{ evenement.adresse }}</p>
+        <p>
+          <strong>Date & Heure :</strong><br />
+          Du {{ evenement.datedebut | date: 'fullDate' }} à {{ evenement.datedebut | date: 'shortTime' }}<br />
+          Au {{ evenement.datefin | date: 'fullDate' }} à {{ evenement.datefin | date: 'shortTime' }}
+        </p>
+
+        <!-- Politique de participation -->
+        <div class="policy">
+          <h3>Politique de participation</h3>
+          <ul>
+            <li>Annulation possible 24h avant l'événement.</li>
+            <li>Respect des règles de bonne conduite obligatoire.</li>
+            <li>Merci d’arriver 10 minutes avant le début.</li>
+          </ul>
+        </div>
+
+        <!-- Bouton Confirmer (affiché uniquement si connecté) -->
+        <div *ngIf="currentUser; else loginPrompt">
+          <button
+  class="btn-confirm"
+  [disabled]="(evenement.capacity - (evenement.starRating || 0)) <= 0"
+  (click)="reserver()"
+>
+  ✅ Confirmer ma participation
+</button>
+
+        </div>
+
+        <!-- Message pour inviter à se connecter -->
+        <ng-template #loginPrompt>
+          <p class="text-danger">
+            Vous devez être connecté pour participer à cet événement. 
+            <a routerLink="/login">Se connecter</a>
+          </p>
+        </ng-template>
+
+        <!-- Message d’erreur capacité -->
+        <p class="alert alert-danger" *ngIf="(evenement.capacity - (evenement.starRating || 0)) <= 0">
+          ❌ Plus de place disponible.
+        </p>
+
+        <!-- Affichage des infos du participant après confirmation 
+      <div *ngIf="showParticipantInfo && currentUser" class="participant-info" 
+             style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; background: #f9f9f9; border-radius: 6px;">
+          <h3>Participant confirmé :</h3>
+          <p><strong>Nom :</strong> {{ currentUser.lastName || currentUser.nom }}</p>
+          <p><strong>Prénom :</strong> {{ currentUser.firstName || currentUser.prenom }}</p>
+          <p><strong>Email :</strong> {{ currentUser.email }}</p>
+        </div>  -->
+
+      </div>
+
+      <!-- Image à droite -->
+      <div class="image-container">
+        <h1 class="title">{{ evenement.title }}</h1>
+
+        <img
+          [src]="evenement.imageUrl || 'assets/default-event.jpg'"
+          alt="Affiche de l'événement"
+          class="event-image"
+        />
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation-links">
+      <a routerLink="/front" class="link-back">← Retour à la liste des événements</a>
+    </div>
+
+    <!-- Section Catégories disponibles -->
+    <div class="row mt-5 categories-section">
+      <div class="col-12 mb-4 d-flex align-items-center">
+        <span class="text-uppercase fw-bold icon-category" style="font-weight: 900; font-size: 1.5rem;">🗂️</span>
+        <span class="gradient-title ms-3">Catégories disponibles</span>
+      </div>
+
+      <!-- Statistiques -->
+      <div class="col-md-3 mb-4">
+        <button type="button" class="card btn-category w-100" style="border-radius: 0.5rem;">
+          <span class="icon-circle bg-light text-primary fs-3">📊</span>
+          <span class="mt-3 fw-semibold text-dark d-block">Statistiques</span>
+        </button>
+      </div>
+
+      <!-- Chat -->
+      <div class="col-md-3 mb-4">
+        <button type="button" class="card btn-category w-100" (click)="goToChat()" style="border-radius: 0.5rem;">
+          <span class="icon-circle bg-light text-primary fs-3">💬</span>
+          <span class="mt-3 fw-semibold text-dark d-block">Conversations</span>
+        </button>
+      </div>
+
+      <!-- Email -->
+      <div class="col-md-3 mb-4">
+        <button type="button" class="card btn-category w-100" (click)="goToEmail()" style="border-radius: 0.5rem;">
+          <span class="icon-circle bg-light text-primary fs-3">✉️</span>
+          <span class="mt-3 fw-semibold text-dark d-block">Email</span>
+        </button>
+      </div>
+
+      <!-- Historique -->
+      <div class="col-md-3 mb-4">
+        <button type="button" class="card btn-category w-100" (click)="goToHistorical()" style="border-radius: 0.5rem;">
+          <span class="icon-circle bg-light text-primary fs-3">📁</span>
+          <span class="mt-3 fw-semibold text-dark d-block">Historique</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <p>Chargement de l'événement...</p>
+  </ng-template>
+</div>

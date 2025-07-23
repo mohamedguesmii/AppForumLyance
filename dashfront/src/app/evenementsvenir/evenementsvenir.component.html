@@ -1,0 +1,175 @@
+<!-- Wrapper avec background -->
+<div class="background-wrapper">
+  <div class="dashboard-section">
+    <h2>Événements à venir (Scrappés)</h2>
+
+    <div class="button-container">
+      <button 
+        (click)="relancerScraping()" 
+        [disabled]="loading"
+        [ngStyle]="{
+          'background-color': loading ? '#95a5a6' : '#3498db',
+          'cursor': loading ? 'not-allowed' : 'pointer'
+        }"
+        (mouseenter)="!loading && (this.style.backgroundColor = '#2980b9')"
+        (mouseleave)="!loading && (this.style.backgroundColor = '#3498db')"
+      >
+        {{ loading ? 'Chargement...' : 'Lancer un nouveau scraping' }}
+      </button>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!loading && evenements?.length === 0" class="empty-message">
+      Aucun événement à venir pour le moment.
+    </div>
+
+    <div class="events-list">
+      <article *ngFor="let evt of evenements" class="event-card">
+        <img *ngIf="evt.imageUrl" [src]="evt.imageUrl" alt="Image événement" />
+        <div class="event-info">
+          <h3>{{ evt.title }}</h3>
+          <p><strong>Date début :</strong> {{ evt.datedebut | date:'fullDate' }}</p>
+          <p><strong>Date fin :</strong> {{ evt.datefin | date:'fullDate' }}</p>
+          <p><strong>Lieu :</strong> {{ evt.adresse }}</p>
+          <p *ngIf="evt.description" class="description">
+            {{ evt.description }}
+          </p>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Background similaire à .main-container */
+  .background-wrapper {
+    min-height: 100vh;
+    padding: 40px 15px;
+    background-image: url('assets/frontoffice/img/jj.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* Overlay sombre */
+    position: relative;
+  }
+  .background-wrapper::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.45);
+    z-index: 0;
+  }
+
+  /* Section principale */
+  .dashboard-section {
+    position: relative;
+    max-width: 800px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 30px 25px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    color: #2c3e50;
+    font-family: Arial, sans-serif;
+    z-index: 1; /* devant l'overlay */
+  }
+
+  .dashboard-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .button-container {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  button {
+    padding: 12px 28px;
+    font-size: 16px;
+    cursor: pointer;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  .error-message {
+    color: #e74c3c;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .empty-message {
+    text-align: center;
+    color: #7f8c8d;
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+
+  .events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .event-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background-color: #fafafa;
+  }
+
+  .event-card img {
+    width: 160px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+
+  .event-info {
+    flex: 1;
+  }
+
+  .event-info h3 {
+    margin: 0 0 10px 0;
+    color: #34495e;
+  }
+
+  .event-info p {
+    margin: 5px 0;
+  }
+
+  .description {
+    margin-top: 12px;
+    color: #7f8c8d;
+    line-height: 1.4;
+  }
+
+  /* Responsive : réduire padding sur petits écrans */
+  @media (max-width: 480px) {
+    .dashboard-section {
+      padding: 20px 15px;
+    }
+    .event-card {
+      flex-direction: column;
+      align-items: center;
+    }
+    .event-card img {
+      width: 100%;
+      height: auto;
+    }
+  }
+</style>

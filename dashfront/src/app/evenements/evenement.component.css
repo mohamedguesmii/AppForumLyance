@@ -1,0 +1,231 @@
+/* le design ajoutez evenement  */
+thead th:nth-child(1) {
+  color: #ff6f61; /* Rouge saumon */
+}
+thead th:nth-child(2) {
+  color: #6a5acd; /* Bleu violet */
+}
+thead th:nth-child(3) {
+  color: #20d5c9; /* Turquoise */
+}
+thead th:nth-child(4) {
+  color: #ffa500; /* Orange */
+}
+thead th:nth-child(5) {
+  color: #32cd32; /* Vert lime */
+}
+thead th:nth-child(6) {
+  color: #ff1493; /* Rose fuchsia */
+}
+thead th:nth-child(7) {
+  color: #00bfff; /* Bleu ciel */
+}
+thead th:nth-child(8) {
+  color: #9370db; /* Violet moyen */
+}
+thead th:nth-child(9) {
+  color: #ffd700; /* Doré */
+}
+
+.modal-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #01ad8a; /* couleur verte simple */
+  text-align: center;
+  width: 100%;
+  margin: 0;
+}
+
+
+.modal-content {
+  background: linear-gradient(to bottom right,  #00283a, #047c5e); /* Bleu à violet */
+  color: white;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  padding: 25px;
+}
+
+.modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.btn-close-white {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.btn-close-white:hover {
+  transform: rotate(90deg);
+}
+
+.modal-body label {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.modal-body input,
+.modal-body textarea {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  padding: 8px;
+  transition: border 0.2s ease;
+}
+.modal-body input:focus,
+.modal-body textarea:focus {
+  outline: none;
+  border-color: #38bdf8;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 15px;
+}
+
+.modal-footer .btn-primary {
+  background: linear-gradient(to right, #00283a, #047c5e);
+  border: none;
+  font-weight: 600;
+}
+.modal-footer .btn-primary:hover {
+  background: linear-gradient(to right, #00283a, #047c5e);
+}
+
+.modal-footer .btn-secondary {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+}
+.modal-footer .btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+
+
+/* le design du tableau et titre  */
+.custom-add-btn {
+  background: linear-gradient(to right, #00283a, #047c5e); /* Bleu à violet */
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.custom-add-btn:hover {
+  background-color: #0284c7; /* Bleu foncé */
+}
+
+.gradient-text {
+  font-size: 2rem;
+  font-weight: bold;
+  background: linear-gradient(to right, #0ea5e9, #047c5e); /* Bleu à violet */
+  background-clip: text;
+  -webkit-background-clip: text; /* Pour Chrome, Safari */
+  color: transparent;
+  -webkit-text-fill-color: transparent; /* Nécessaire avec -webkit-background-clip */
+}
+
+.star-rating {
+  font-size: 1.6rem;
+  color: lightgray;
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+}
+
+.star-rating span {
+  transition: color 0.3s ease;
+  margin: 0 2px;
+}
+
+.star-rating span.filled {
+  color: #ffb400; /* couleur étoiles pleines */
+}
+
+.star-rating span:hover,
+.star-rating span:hover ~ span {
+  color: #ffa500; /* couleur au survol */
+}
+
+/* Tableau fond noir */
+table.table {
+  background-color: transparent !important;
+  color: white; /* texte blanc */
+  border-collapse: collapse;
+  max-width: 1300px;
+  width: 100%;
+  font-size: 0.85rem;
+}
+
+/* En-tête tableau */
+thead th {
+  background-color: #000000; /* presque noir */
+  color: #00fff7; /* couleur cyan clair par exemple */
+  border: 1px solid #000000;
+}
+
+/* Corps tableau - fond noir pour chaque cellule */
+tbody td {
+  background-color: #067b58; /* fond noir */
+  color: white; /* texte blanc */
+  vertical-align: middle;
+  border: 1px solid #222;
+  padding: 8px;
+}
+
+/* Exemple de champs avec couleur spécifique */
+td.capacity {
+  background-color: #003300; /* vert foncé pour capacité */
+  color: #aaffaa;
+}
+
+td.date-debut, td.date-fin {
+  background-color: #330000; /* rouge foncé pour dates */
+  color: #ff9999;
+}
+
+td.adresse {
+  background-color: #000033; /* bleu foncé pour adresse */
+  color: #9999ff;
+}
+
+/* Image - pas de changement */
+.event-image {
+  max-width: 100px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
+  border: 1px solid #444;
+}
+
+/* Boutons actions */
+td button {
+  color: white;
+  background-color: #222;
+  border: none;
+  padding: 5px 8px;
+  margin: 0 2px;
+  border-radius: 3px;
+  transition: background-color 0.3s ease;
+}
+
+td button:hover {
+  background-color: #00bbb4;
+  color: #000;
+}

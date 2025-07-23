@@ -1,0 +1,296 @@
+<!-- STYLE -->
+<style>
+  .main-container {
+    display: flex;
+    height: 100vh;
+    background-image: url('assets/frontoffice/img/jj.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .content-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px 20px;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    color: white;
+  }
+
+  .gradient-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: left;
+    background: linear-gradient(90deg, rgb(10, 125, 125), rgb(58, 6, 66));
+    color: rgb(209, 238, 237);
+    padding: 5px 20px;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+
+  table.table thead th {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(2px);
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+
+  thead th.col-select { background-color: #1b2733 !important; color: #f39c12 !important; }
+  thead th.col-firstName { background-color: #222233 !important; color: #1abc9c !important; }
+  thead th.col-lastName { background-color: #2f2f3f !important; color: #e67e22 !important; }
+  thead th.col-email { background-color: #1f2833 !important; color: #3498db !important; }
+  thead th.col-date { background-color: #264653 !important; color: #2a9d8f !important; }
+  thead th.col-nbr { background-color: #3a2c2c !important; color: #e74c3c !important; }
+  thead th.col-type { background-color: #283618 !important; color: #27ae60 !important; }
+  thead th.col-offre { background-color: #6a4f9f !important; color: #f1c40f !important; }
+  thead th.col-event { background-color: #3e2f4f !important; color: #9b59b6 !important; }
+  thead th.col-actions { background-color: #222 !important; color: #fff !important; }
+
+  table.table tbody td {
+    background-color: rgba(4, 150, 120, 0.3);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.1);
+    vertical-align: middle;
+    backdrop-filter: blur(3px);
+    transition: background-color 0.3s ease;
+  }
+
+  table.table tbody tr:hover td {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  img.rounded-circle {
+    border: 2px solid #ddd;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+  }
+
+  .statut-dropdown {
+    width: 45px;
+    background-color: transparent;
+    color: transparent;
+    border: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg fill='white' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 12px;
+    cursor: pointer;
+    padding: 5px;
+  }
+
+  .statut-dropdown option {
+    color: black;
+  }
+
+  .edit-form {
+    background-color: rgba(10, 10, 10, 0.8);
+    padding: 15px 20px;
+    margin-top: 10px;
+    border-radius: 8px;
+    color: white;
+  }
+
+  .edit-form label {
+    font-weight: bold;
+  }
+
+  .edit-form .btn-group {
+    margin-top: 10px;
+  }
+
+  /* Barre recherche + bouton suppression */
+  .search-delete-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+  }
+  .search-delete-container input[type="text"] {
+    flex-grow: 1;
+  }
+</style>
+
+<!-- HTML PRINCIPAL -->
+<div class="main-container">
+  <div class="content-container">
+    <h2 class="gradient-title">🗓️ Liste des Rendez-vous Planifiés</h2>
+
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="isLoading" class="text-white">Chargement...</div>
+
+    <!-- FILTRE STATUT -->
+    <div class="mb-3" *ngIf="!isLoading && rendezvousList.length > 0">
+      <label for="filterStatut" class="form-label text-white">Filtrer par statut :</label>
+      <select id="filterStatut" [(ngModel)]="filterStatut" class="form-select w-auto">
+        <option value="">Tous</option>
+        <option value="PLANIFIE">Planifié</option>
+        <option value="ANNULE">Annulé</option>
+        <option value="TERMINE">Terminé</option>
+      </select>
+    </div>
+
+    <!-- RECHERCHE + SUPPRESSION MULTIPLE -->
+    <div class="search-delete-container" *ngIf="!isLoading && rendezvousList.length > 0">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Rechercher par prénom, nom ou email..."
+        [(ngModel)]="searchText"
+      />
+      <!-- Le bouton est affiché uniquement s'il y a au moins un élément sélectionné -->
+<button *ngIf="selectedIds.size > 0" class="btn btn-danger"
+        (click)="supprimerSelectionMultiple()"
+        title="Supprimer tous les rendez-vous sélectionnés">
+  Supprimer sélectionnés ({{ selectedIds.size }})
+</button>
+
+    </div>
+
+    <!-- TABLEAU -->
+    <div class="table-responsive mt-4" *ngIf="!isLoading && filteredRendezvous.length > 0">
+      <table class="table table-sm table-hover text-center align-middle">
+        <thead>
+          <tr>
+            <th class="col-select">
+              <input
+                type="checkbox"
+                [checked]="isAllSelected()"
+                (change)="toggleSelectAll()"
+                title="Sélectionner tout"
+              />
+            </th>
+            <th class="col-firstName">Prénom</th>
+            <th class="col-lastName">Nom</th>
+            <th class="col-email">Email</th>
+            <th class="col-date">Date & Heure</th>
+            <th class="col-nbr">Statut</th>
+            <th class="col-type">Actif</th>
+            <th class="col-offre">Offre</th>
+            <th class="col-event">Image</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let rdv of filteredRendezvous">
+            <!-- LIGNE DE DONNÉES -->
+            <tr>
+              <td>
+                <input
+                  type="checkbox"
+                  [checked]="selectedIds.has(rdv.id)"
+                  (change)="toggleSelection(rdv.id)"
+                  [disabled]="selectedRdvToEdit?.id === rdv.id"
+                  title="Sélectionner ce rendez-vous"
+                />
+              </td>
+              <td>{{ rdv.candidature?.prenom || 'N/A' }}</td>
+              <td>{{ rdv.candidature?.nom || 'N/A' }}</td>
+              <td>{{ rdv.candidature?.email || 'N/A' }}</td>
+              <td>{{ rdv.dateHeure | date: 'short' }}</td>
+              <td>
+                <span class="badge d-block mb-1"
+                      [ngClass]="{
+                        'bg-success': rdv.statut === 'PLANIFIE',
+                        'bg-danger': rdv.statut === 'ANNULE',
+                        'bg-secondary': rdv.statut === 'TERMINE'
+                      }">
+                  {{ rdv.statut }}
+                </span>
+                <hr class="my-1 border-white opacity-25" />
+                <select class="form-select form-select-sm statut-dropdown"
+                        (change)="changerStatut(rdv, $event.target.value)">
+                  <option disabled selected hidden>⮟</option>
+                  <option value="PLANIFIE" [disabled]="rdv.statut === 'PLANIFIE'">Planifié</option>
+                  <option value="ANNULE" [disabled]="rdv.statut === 'ANNULE'">Annulé</option>
+                  <option value="TERMINE" [disabled]="rdv.statut === 'TERMINE'">Terminé</option>
+                </select>
+              </td>
+              <td>{{ rdv.actif ? 'Oui' : 'Non' }}</td>
+              <td>{{ rdv.candidature?.nomOffre || 'N/A' }}</td>
+              <td>
+                <img *ngIf="rdv.candidature?.imageUrl"
+                     [src]="rdv.candidature.imageUrl"
+                     alt="Image Profil"
+                     class="rounded-circle"
+                     width="40" height="40" />
+                <span *ngIf="!rdv.candidature?.imageUrl">-</span>
+              </td>
+              <td>
+                <div class="btn-group">
+                  <button class="btn btn-outline-primary btn-sm"
+                          (click)="modifierRendezVous(rdv)" title="Modifier">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm"
+                          (click)="supprimerRendezVous(rdv.id)" title="Supprimer">
+                    <i class="fa fa-trash"></i>
+                  </button>
+
+                <button class="btn btn-outline-success btn-sm" (click)="envoyerEmail(rdv)" title="Envoyer email">
+  <i class="fa fa-envelope"></i> 
+</button>
+
+
+
+                </div>
+              </td>
+            </tr>
+
+            <!-- LIGNE DE FORMULAIRE -->
+            <tr *ngIf="selectedRdvToEdit?.id === rdv.id">
+              <td colspan="10">
+                <div class="edit-form" #editFormContainer>
+                  <h5>Modifier Date & Heure (ID: {{ selectedRdvToEdit.id }})</h5>
+                  <form (ngSubmit)="sauvegarderModification(selectedRdvToEdit!)">
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="date">Date</label>
+                        <input
+                          type="date"
+                          id="date"
+                          class="form-control"
+                          [ngModel]="selectedRdvToEdit.dateHeure ? (selectedRdvToEdit.dateHeure | date:'yyyy-MM-dd') : ''"
+                          (ngModelChange)="onDateChange($event)"
+                          name="date"
+                          required
+                          [ngModelOptions]="{standalone: true}" />
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="time">Heure</label>
+                        <input
+                          type="time"
+                          id="time"
+                          class="form-control"
+                          [ngModel]="selectedRdvToEdit.dateHeure ? (selectedRdvToEdit.dateHeure | date:'HH:mm') : ''"
+                          (ngModelChange)="onTimeChange($event)"
+                          name="time"
+                          required
+                          [ngModelOptions]="{standalone: true}" />
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2">
+                      <button type="submit" class="btn btn-success btn-sm">Enregistrer</button>
+                      <button type="button" class="btn btn-secondary btn-sm" (click)="annulerModification()">Annuler</button>
+                    
+                    </div>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+
+      <div *ngIf="filteredRendezvous.length === 0" class="alert alert-info mt-3 text-white">
+        Aucun rendez-vous avec ce filtre.
+      </div>
+    </div>
+  </div>
+</div>

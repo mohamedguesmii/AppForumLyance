@@ -1,0 +1,143 @@
+#scheduler-container {
+    font-family: Arial, sans-serif;
+  }
+  
+  #scheduler-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  #scheduler-navigation {
+    display: flex;
+  }
+  
+  #scheduler-navigation button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #scheduler-navigation button:hover {
+    background-color: #0056b3;
+  }
+  
+  #current-date {
+    font-size: 18px;
+  }
+  
+  #view-options button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #view-options button:hover {
+    background-color: #218838;
+  }
+  
+  #scheduler-view {
+    padding: 20px;
+  }
+  
+  /* Styles for day scheduler */
+  .day-scheduler {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .day-scheduler table {
+    width: 100%;
+  }
+  
+  .day-scheduler th,
+  .day-scheduler td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .day-scheduler th {
+    background-color: #f0f0f0;
+  }
+  
+  .day-scheduler td {
+    cursor: pointer;
+  }
+  
+  .day-scheduler td:hover {
+    background-color: #f8f9fa;
+  }
+  
+  /* Styles for week scheduler */
+  .week-scheduler {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .week-scheduler table {
+    width: 100%;
+  }
+  
+  .week-scheduler th,
+  .week-scheduler td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .week-scheduler th {
+    background-color: #f0f0f0;
+  }
+  
+  .week-scheduler td {
+    cursor: pointer;
+  }
+  
+  .week-scheduler td:hover {
+    background-color: #f8f9fa;
+  }
+  
+  /* Styles for month scheduler */
+  .month-scheduler {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .month-scheduler table {
+    width: 100%;
+  }
+  
+  .month-scheduler th,
+  .month-scheduler td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .month-scheduler th {
+    background-color: #f0f0f0;
+  }
+  
+  .month-scheduler td {
+    cursor: pointer;
+  }
+  
+  .month-scheduler td:hover {
+    background-color: #f8f9fa;
+  }
+  

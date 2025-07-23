@@ -1,0 +1,267 @@
+<div class="main-container" style="padding: 20px; max-width: 1200px; margin: auto; font-family: Arial, sans-serif;">
+
+  <!-- Titre principal -->
+  <div class="offres-container">
+    <h2 class="fw-bold mb-4 text-center">
+      <span class="icon">💼</span>
+      <span class="gradient-title">Gestion des Offres</span>
+    </h2>
+
+    <!-- Barre de recherche -->
+    <div class="mb-5 text-center">
+      <input
+        type="text"
+        class="form-control w-50 mx-auto shadow-sm"
+        placeholder="🔍 Rechercher par titre, description..."
+        [(ngModel)]="searchTerm"
+        style="padding: 10px; font-size: 1rem; border-radius: 5px; border: 1px solid #ccc;"
+      />
+    </div>
+
+    <!-- FORMULAIRE D’AJOUT / MODIFICATION D’OFFRE -->
+    <div
+      *ngIf="showForm && offreEnEdition"
+      class="mb-5 p-4 bg-white rounded shadow-sm border"
+      style="max-width: 900px; margin: 0 auto;"
+    >
+      <h3 class="text-center fw-bold mb-4 text-primary text-uppercase" style="font-weight: 600;">
+        ✏️ {{ offreEnEdition.id ? 'Modifier' : 'Ajouter' }} l'offre :
+        {{ offreEnEdition.titre || '(nouvelle offre)' }}
+      </h3>
+
+      <form (ngSubmit)="soumettreModification()" #formModif="ngForm" novalidate>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="titre" class="form-label fw-bold" style="font-weight: 600;">
+              <i class="fas fa-heading me-1 text-primary"></i> Titre <span style="color: red;">*</span>
+            </label>
+            <input
+              type="text"
+              id="titre"
+              name="titre"
+              [(ngModel)]="offreEnEdition.titre"
+              class="form-control"
+              required
+              placeholder="Ex: Développeur Angular"
+              [class.is-invalid]="formModif.submitted && !offreEnEdition.titre"
+              style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;"
+            />
+            <div class="invalid-feedback" *ngIf="formModif.submitted && !offreEnEdition.titre">
+              Le titre est obligatoire.
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="domaine" class="form-label fw-bold" style="font-weight: 600;">
+              <i class="fas fa-briefcase me-1 text-success"></i> Domaine
+            </label>
+            <input
+              type="text"
+              id="domaine"
+              name="domaine"
+              [(ngModel)]="offreEnEdition.domaine"
+              class="form-control"
+              placeholder="Ex: Informatique, Marketing"
+              style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <label for="type" class="form-label fw-bold" style="font-weight: 600;">
+              <i class="fas fa-list-alt me-1 text-info"></i> Type
+            </label>
+            <select
+              id="type"
+              name="type"
+              [(ngModel)]="offreEnEdition.type"
+              class="form-select"
+              required
+              style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;"
+            >
+              <option [value]="'emploi'">Emploi</option>
+              <option [value]="'stage'">Stage</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="duree" class="form-label fw-bold" style="font-weight: 600;">
+              <i class="fas fa-hourglass-half me-1 text-warning"></i> Durée
+            </label>
+            <input
+              type="text"
+              id="duree"
+              name="duree"
+              [(ngModel)]="offreEnEdition.duree"
+              class="form-control"
+              placeholder="Ex: 6 mois, 3 semaines"
+              style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <label for="statut" class="form-label fw-bold" style="font-weight: 600;">
+              <i class="fas fa-info-circle me-1 text-secondary"></i> Statut
+            </label>
+            <select
+              id="statut"
+              name="statut"
+              [(ngModel)]="offreEnEdition.statut"
+              class="form-select"
+              required
+              style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;"
+            >
+              <option [value]="'EN_ATTENTE'">⏳ En attente</option>
+              <option [value]="'ACCEPTEE'">✅ Acceptée</option>
+              <option [value]="'REFUSEE'">❌ Refusée</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="evenementId" class="form-label fw-bold" style="font-weight: 600;">
+              <i class="fas fa-calendar-alt me-1 text-primary"></i> Événement associé
+            </label>
+            <select
+              id="evenementId"
+              name="evenementId"
+              [(ngModel)]="offreEnEdition.evenementId"
+              class="form-select"
+              style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;"
+            >
+              <option [ngValue]="null">-- Sélectionner un événement --</option>
+              <option *ngFor="let event of evenements" [ngValue]="event.id">
+                {{ event.title }} ({{ event.dateDebut | date:'shortDate' }})
+              </option>
+            </select>
+          </div>
+
+          <div class="col-12">
+            <label for="description" class="form-label fw-bold" style="font-weight: 600;">
+              <i class="fas fa-align-left me-1 text-muted"></i> Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              [(ngModel)]="offreEnEdition.description"
+              rows="4"
+              class="form-control"
+              placeholder="Détaillez ici les missions, compétences requises..."
+              style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; resize: vertical;"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <button
+            type="submit"
+            class="btn btn-success me-2 px-4"
+            [disabled]="formModif.invalid"
+            style="font-weight: 600;"
+          >
+            <i class="fas fa-save me-1"></i> Enregistrer
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary px-4"
+            (click)="annulerModification()"
+            style="font-weight: 600;"
+          >
+            <i class="fas fa-times me-1"></i> Annuler
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Offres Emploi / Stage -->
+    <div class="row gy-4">
+
+      <!-- Emplois -->
+      <div class="col-md-6">
+        <h3 class="text-primary mb-3" style="font-weight: 700;">
+          🧑‍💼 Offres d'emploi ({{ filteredEmploi.length }})
+        </h3>
+
+        <div *ngIf="filteredEmploi.length === 0" class="text-center fst-italic text-muted">
+          Aucune offre d'emploi disponible.
+        </div>
+
+        <div *ngFor="let offre of pagedEmploi"
+          class="card border-0 shadow-sm mb-3"
+          style="background: linear-gradient(135deg, #f6f4f6, #dadada); padding: 20px; border-radius: 10px;"
+        >
+          <h5 class="card-title fw-bold" style="font-size: 1.2rem;">{{ offre.titre }}</h5>
+<p *ngIf="getEvenementTitre(offre.evenementId)" class="mb-1 fst-italic text-primary">
+  📅 Événement associé : {{ getEvenementTitre(offre.evenementId) }}
+</p>
+
+          <p *ngIf="offre.duree" class="ms-auto mb-1">⏱️ Durée : {{ offre.duree }}</p>
+          <p *ngIf="offre.description" class="mb-1">🏢 {{ offre.description }}</p>
+
+          <div class="d-flex justify-content-between mt-3">
+            <button class="btn btn-outline-primary btn-sm" (click)="modifierOffre(offre)">
+              <i class="fas fa-edit me-1"></i> Modifier
+            </button>
+            <button class="btn btn-outline-danger btn-sm" (click)="supprimerOffre(offre)">
+              <i class="fas fa-trash me-1"></i> Supprimer
+            </button>
+          </div>
+        </div>
+
+        <!-- Pagination Emploi -->
+        <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+          <button class="btn btn-secondary btn-sm" (click)="emploiPrevPage()" [disabled]="emploiPage === 1">
+            ← Précédent
+          </button>
+          <span>Page {{ emploiPage }} / {{ totalEmploiPages }}</span>
+          <button class="btn btn-secondary btn-sm" (click)="emploiNextPage()" [disabled]="emploiPage === totalEmploiPages">
+            Suivant →
+          </button>
+        </div>
+      </div>
+
+      <!-- Stages -->
+      <div class="col-md-6">
+        <h3 class="text-warning mb-3" style="font-weight: 700;">
+          🎓 Offres de stage ({{ filteredStage.length }})
+        </h3>
+
+        <div *ngIf="filteredStage.length === 0" class="text-center fst-italic text-muted">
+          Aucune offre de stage disponible.
+        </div>
+
+        <div *ngFor="let offre of pagedStage"
+          class="card border-0 shadow-sm mb-3"
+          style="background: linear-gradient(135deg, #eeedeb, #efedef); padding: 20px; border-radius: 10px;"
+        >
+          <h5 class="card-title fw-bold" style="font-size: 1.2rem;">{{ offre.titre }}</h5>
+          <p *ngIf="getEvenementTitre(offre.evenementId)" class="mb-1 fst-italic text-primary">
+            📅 Événement associé : {{ getEvenementTitre(offre.evenementId) }}
+          </p>
+          <p *ngIf="offre.duree" class="ms-auto mb-1">⏱️ Durée : {{ offre.duree }}</p>
+          <p *ngIf="offre.description" class="mb-1">🏢 {{ offre.description }}</p>
+
+          <div class="d-flex gap-2 flex-wrap mt-3">
+            <button class="btn btn-outline-primary btn-sm d-flex align-items-center" (click)="modifierOffre(offre)">
+              <i class="fas fa-edit me-1"></i> Modifier
+            </button>
+            <button class="btn btn-outline-danger btn-sm d-flex align-items-center" (click)="supprimerOffre(offre)">
+              <i class="fas fa-trash me-1"></i> Supprimer
+            </button>
+          </div>
+        </div>
+
+        <!-- Pagination Stage -->
+        <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+          <button class="btn btn-secondary btn-sm" (click)="stagePrevPage()" [disabled]="stagePage === 1">
+            ← Précédent
+          </button>
+          <span>Page {{ stagePage }} / {{ totalStagePages }}</span>
+          <button class="btn btn-secondary btn-sm" (click)="stageNextPage()" [disabled]="stagePage === totalStagePages">
+            Suivant →
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

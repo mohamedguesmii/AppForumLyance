@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Amélioré</title>
+
+  <!-- Bootstrap 4 CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <!-- Material Icons -->
+  <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet"
+  />
+  <!-- FontAwesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <!-- FullCalendar CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* Animation légère au survol */
+    .card.card-stats:hover {
+      transform: scale(1.03);
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+    }
+
+    /* Styles des cartes graphiques */
+    .card-chart .card-header {
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.25rem 0.25rem 0 0;
+    }
+    .card-chart .card-body {
+      padding: 1rem;
+    }
+    .card-chart .card-footer {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      color: #777;
+    }
+
+    /* Onglets */
+    .card-header.card-header-tabs.card-header-primary {
+      background-color: #3f51b5;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem 0.25rem 0 0;
+    }
+    .nav-tabs .nav-item .nav-link {
+      color: white;
+      opacity: 0.8;
+      font-weight: 600;
+    }
+    .nav-tabs .nav-item .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-weight: 700;
+      border-radius: 0.25rem 0.25rem 0 0;
+    }
+    .td-actions .btn {
+      margin-left: 5px;
+      font-size: 16px;
+      padding: 5px 8px;
+      border-radius: 50%;
+    }
+    thead.text-warning th {
+      color: #ffa726;
+    }
+  </style>
+</head>
+<body>
+<div class="container-fluid ">
+
+
+
+    <!-- Dashboard  -->
+   
+ 
+
+
+    <!-- Cartes Statistiques -->
+    <div class="row">
+      <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+        <div class="card card-stats">
+          <div class="card-header bg-primary text-white d-flex align-items-center">
+            <i class="material-icons mr-2">event</i>
+            <div>
+              <p class="mb-0">Forums</p>
+              <h3 class="mb-0">12</h3>
+            </div>
+          </div>
+          <div class="card-footer text-muted">
+            <i class="material-icons">date_range</i> Total organisés
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+        <div class="card card-stats">
+          <div class="card-header bg-success text-white d-flex align-items-center">
+            <i class="material-icons mr-2">work</i>
+            <div>
+              <p class="mb-0">Offres</p>
+              <h3 class="mb-0">48</h3>
+            </div>
+          </div>
+          <div class="card-footer text-muted">
+            <i class="material-icons">update</i> Mise à jour récente
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+        <div class="card card-stats">
+          <div class="card-header bg-info text-white d-flex align-items-center">
+            <i class="material-icons mr-2">person</i>
+            <div>
+              <p class="mb-0">Candidats</p>
+              <h3 class="mb-0">120</h3>
+            </div>
+          </div>
+          <div class="card-footer text-muted">
+            <i class="material-icons">people</i> Inscriptions actives
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+        <div class="card card-stats">
+          <div class="card-header bg-warning text-white d-flex align-items-center">
+            <i class="material-icons mr-2">video_call</i>
+            <div>
+              <p class="mb-0">Entretiens</p>
+              <h3 class="mb-0">7</h3>
+            </div>
+          </div>
+          <div class="card-footer text-muted">
+            <i class="material-icons">schedule</i> Planifiés aujourd'hui
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+   
+
+    <!-- Onglets tâches / listes importantes -->
+    <div class="row">
+   <div class="col-lg-6 col-md-12">
+    <div class="card">
+      <div class="card-header text-white" style="background-color: rgb(244, 124, 20);">
+        <h4 class="card-title">Événements recements</h4>
+        <p class="card-category">Événements</p>
+      </div>
+          <!-- Événements à venir -->
+      <div class="tab-pane fade show active" id="evenements" role="tabpanel" aria-labelledby="evenements-tab">
+        <table class="table table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th>Nom Événement</th>
+              <th>Date</th>
+              <th>Lieu</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Salon Emploi Tech</td>
+              <td>10/07/2025</td>
+              <td>Tunis</td>
+              <td><span class="badge badge-warning">À venir</span></td>
+              
+            </tr>
+            <tr>
+              <td>Journée Recrutement Lyance</td>
+              <td>25/07/2025</td>
+              <td>Sousse</td>
+              <td><span class="badge badge-secondary">Planifié</span></td>
+              
+            </tr>
+            <tr>
+              <td>Forum Jeunes Talents</td>
+              <td>15/08/2025</td>
+              <td>Monastir</td>
+              <td><span class="badge badge-success">Confirmé</span></td>
+             
+            </tr>
+          </tbody>
+        </table>
+      </div>
+</div>
+
+      </div>
+
+      <!-- Tableau Forums récents -->
+      <div class="col-lg-6 col-md-12">
+    <div class="card">
+      <div class="card-header text-white" style="background-color: #ec0043;">
+        <h4 class="card-title">Événements recements</h4>
+        <p class="card-category">Événements</p>
+      </div>
+          <!-- Événements à venir -->
+      <div class="tab-pane fade show active" id="evenements" role="tabpanel" aria-labelledby="evenements-tab">
+        <table class="table table-hover">
+          <thead class="thead-light">
+            <tr>
+                  <th>Nom Forum</th>
+                  <th>Date</th>
+                  <th>Nombre Participants</th>
+                  <th>Lieu</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Forum Lyance Juin 2025</td>
+                  <td>15/06/2025</td>
+                  <td>150</td>
+                  <td>Tunis</td>
+                </tr>
+                <tr>
+                  <td>Forum Été 2025</td>
+                  <td>01/08/2025</td>
+                  <td>200</td>
+                  <td>Sousse</td>
+                </tr>
+                <tr>
+                  <td>Forum Automne 2024</td>
+                  <td>10/11/2024</td>
+                  <td>130</td>
+                  <td>Monastir</td>
+                </tr>
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+    
+
+    <!-- Ligne avec graphiques et notifications -->
+    <div class="row">
+
+<div class="col-md-6 mb-4">
+  <div class="card h-60">
+    <div class="card-header bg-warning text-white">
+      <h4 class="card-title mb-0">5 derniers utilisateurs inscrits</h4>
+    </div>
+    <div class="card-body">
+      <ul class="list-group">
+        <li class="list-group-item d-flex align-items-center">
+          <img src="https://i.pravatar.cc/40?u=user1" class="rounded-circle mr-3" alt="User 1" />
+          <div>
+            <strong>Mohamed Guesmi</strong><br />
+            <small class="text-muted">Inscrit le 28 juin 2025</small>
+          </div>
+        </li>
+        <li class="list-group-item d-flex align-items-center">
+          <img src="https://i.pravatar.cc/40?u=user2" class="rounded-circle mr-3" alt="User 2" />
+          <div>
+            <strong>Sarah Ben Ali</strong><br />
+            <small class="text-muted">Inscrite le 27 juin 2025</small>
+          </div>
+        </li>
+        <li class="list-group-item d-flex align-items-center">
+          <img src="https://i.pravatar.cc/40?u=user3" class="rounded-circle mr-3" alt="User 3" />
+          <div>
+            <strong>Omar Trabelsi</strong><br />
+            <small class="text-muted">Inscrit le 26 juin 2025</small>
+          </div>
+        </li>
+        
+        
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+      <!-- Notifications récentes -->
+      <div class="col-md-6 mb-4">
+        <div class="card h-60">
+          <div class="card-header bg-info text-white">
+            <h4 class="card-title mb-0">Notifications récentes</h4>
+          </div>
+          <div class="card-body">
+            <ul class="list-group">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Nouvelle offre ajoutée
+                <span class="badge badge-success badge-pill">il y a 1h</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Entretien planifié
+                <span class="badge badge-warning badge-pill">il y a 3h</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Nouveau candidat inscrit
+                <span class="badge badge-info badge-pill">il y a 5h</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Forum à venir
+                <span class="badge badge-primary badge-pill">demain</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progression globale -->
+
+
+   
+
+ <style>
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #000000 0%, #06413b 50%, #000000 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .card.card-stats:hover {
+    transform: scale(1.03);
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+  }
+
+  /* le reste de ton CSS... */
+</style>

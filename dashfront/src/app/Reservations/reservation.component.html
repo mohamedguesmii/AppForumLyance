@@ -1,0 +1,226 @@
+<style>
+  .main-container {
+    display: flex;
+    height: 100vh;
+    background-image: url('assets/frontoffice/img/jj.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .content-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px 20px;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    color: white;
+  }
+
+  .gradient-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: left;
+    background: linear-gradient(90deg, rgb(10, 125, 125), rgb(58, 6, 66));
+    color: rgb(209, 238, 237);
+    padding: 5px 20px;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+
+  .btn-group button {
+    margin-right: 4px;
+  }
+
+  /* Table styling */
+  table.table thead th {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(2px);
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+
+  thead th.col-index { background-color: #2a2a2a !important; color: #f1c40f !important; }
+  thead th.col-lastName { background-color: #2f2f3f !important; color: #e67e22 !important; }
+  thead th.col-firstName { background-color: #222233 !important; color: #1abc9c !important; }
+  thead th.col-email { background-color: #1f2833 !important; color: #3498db !important; }
+  thead th.col-event { background-color: #3e2f4f !important; color: #9b59b6 !important; }
+  thead th.col-type { background-color: #283618 !important; color: #27ae60 !important; }
+  thead th.col-nbr { background-color: #3a2c2c !important; color: #e74c3c !important; }
+  thead th.col-date { background-color: #264653 !important; color: #2a9d8f !important; }
+  thead th.col-actions { background-color: #222 !important; color: #fff !important; }
+
+  table.table tbody td {
+    background-color: rgba(4, 150, 120, 0.3);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.1);
+    vertical-align: middle;
+    backdrop-filter: blur(3px);
+    transition: background-color 0.3s ease;
+  }
+
+  table.table tbody tr:hover td {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  /* Modal */
+  .modal {
+    display: block;
+    z-index: 1050;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-dialog {
+    position: relative;
+    margin: auto;
+    top: 10%;
+    max-width: 600px;
+  }
+
+  .modal-content {
+    background-color: #1e1e1e;
+    color: white;
+    border: 1px solid #555;
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .modal-body input, .modal-body select, .modal-body textarea {
+    background-color: #2c2c2c;
+    color: white;
+    border: 1px solid #666;
+  }
+
+  .btn-close-white {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+  }
+</style>
+
+<div class="main-container">
+  <div class="content-container">
+    <h2 class="gradient-title">📅 Liste des Réservations</h2>
+
+    <div *ngIf="notificationMessage" class="alert alert-success alert-dismissible fade show w-100" role="alert" style="max-width: 700px;">
+      {{ notificationMessage }}
+      <button type="button" class="close" (click)="notificationMessage = ''" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="text-end mb-3">
+      <button class="btn btn-secondary" (click)="showForm = !showForm">
+        {{ showForm ? 'Fermer le formulaire' : 'Ajouter une Réservation' }}
+      </button>
+    </div>
+
+    <!-- Formulaire -->
+    <div *ngIf="showForm" class="formulaire-ajout">
+      <form [formGroup]="reservationForm" (ngSubmit)="selectedReservation ? updateReservation() : addReservation()">
+        <div class="row g-3">
+          <div class="col-md-6"><label>Nom</label><input type="text" formControlName="lastName" class="form-control" readonly></div>
+          <div class="col-md-6"><label>Prénom</label><input type="text" formControlName="firstName" class="form-control" readonly></div>
+          <div class="col-md-6"><label>Email</label><input type="email" formControlName="email" class="form-control" readonly></div>
+          <div class="col-md-6"><label>Nombre de places</label><input type="number" formControlName="nbrplace" class="form-control"></div>
+          <div class="col-md-6">
+            <label>Type</label>
+            <select class="form-select" formControlName="type">
+              <option value="">Choisissez le type</option>
+              <option value="vip">VIP</option>
+              <option value="normal">Normal</option>
+              <option value="etudiant">Étudiant</option>
+            </select>
+          </div>
+          <div class="col-md-6"><label>Date de réservation</label><input type="date" class="form-control" formControlName="datereserv"></div>
+          <div class="col-12"><label>Description</label><textarea rows="3" formControlName="description" class="form-control"></textarea></div>
+        </div>
+        <div class="text-end mt-3">
+          <button type="submit" class="btn btn-primary" [disabled]="reservationForm.invalid">
+            {{ selectedReservation ? 'Modifier' : 'Ajouter la Réservation' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Tableau -->
+    <div class="table-responsive mt-4">
+      <table class="table table-sm table-hover text-center align-middle">
+        <thead>
+          <tr>
+            <th class="col-index">#</th>
+            <th class="col-lastName">Nom</th>
+            <th class="col-firstName">Prénom</th>
+            <th class="col-email">Email</th>
+            <th class="col-event">Événement</th>
+            <th class="col-type">Type</th>
+            <th class="col-nbr">Places</th>
+            <th class="col-date">Date</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of reservations; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ r.userLastName ?? '-' }}</td>
+            <td>{{ r.userFirstName ?? '-' }}</td>
+            <td>{{ r.userEmail ?? '-' }}</td>
+            <td>{{ r.evenementTitle ?? '-' }}</td>
+            <td>{{ r.userRole ?? '-' }}</td>
+            <td>{{ r.nbrPlaces ?? 0 }}</td>
+            <td>{{ r.datereserv ? (r.datereserv | date: 'yyyy-MM-dd') : '-' }}</td>
+            <td>
+              <div class="btn-group">
+                <button class="btn btn-outline-info btn-sm" (click)="editReservation(r)">
+                  <i class="fa fa-edit"></i>
+                </button>
+                <button class="btn btn-outline-danger btn-sm" (click)="deleteReservation(r.id)">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modal modification -->
+    <div *ngIf="isEditing && selectedReservation">
+      <div class="modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Modifier Réservation</h5>
+              <button type="button" class="btn-close-white" (click)="cancelEdit()">×</button>
+            </div>
+            <form (ngSubmit)="updateReservation()">
+              <div class="modal-body">
+                <label>Nombre de places</label>
+                <input type="number" class="form-control" [(ngModel)]="selectedReservation.nbrPlaces" name="nbrPlaces" required>
+                <label>Type</label>
+                <select class="form-select mt-2" [(ngModel)]="selectedReservation.userRole" name="userRole">
+                  <option value="vip">VIP</option>
+                  <option value="normal">Normal</option>
+                  <option value="etudiant">Étudiant</option>
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Annuler</button>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

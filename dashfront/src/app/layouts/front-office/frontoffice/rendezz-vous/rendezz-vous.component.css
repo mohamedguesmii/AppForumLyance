@@ -1,0 +1,10 @@
+.btn-black-custom {
+  background-color: #000 !important;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-black-custom:hover {
+  background-color: #1a1a1a !important;
+  transform: scale(1.05);
+}

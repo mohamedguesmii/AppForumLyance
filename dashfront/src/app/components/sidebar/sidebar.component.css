@@ -1,0 +1,48 @@
+
+.material-icons {
+  transition: transform 0.3s ease;
+}
+
+.rotate-90 {
+  transform: rotate(90deg);
+}
+
+.rotate-0 {
+  transform: rotate(0deg);
+}
+
+
+.active-nav {
+  
+  background: linear-gradient(90deg, rgb(1, 22, 86), #1fc4c7); /* Deux nuances de bleu */
+  border-radius: 6px;
+  color: white !important;
+  animation: gradientAnimation 3s ease infinite alternate;
+  transition: color 0.3s ease;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.active-nav a,
+.active-nav i,
+.active-nav p {
+  color: white !important;
+}
+
+.active-nav a {
+  border: none !important;
+  outline: none !important;
+}
+
+a.nav-link:focus,
+a.nav-link:active {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}

@@ -1,0 +1,135 @@
+<div class="navbar-container" style="border: 1px solid #097773; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top">
+    <div class="container-fluid">
+      <!-- Brand -->
+      <div class="navbar-wrapper">
+        <a class="navbar-brand" href="#">{{ getTitle() }}</a>
+      </div>
+
+      <!-- Toggler sidebar -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        (click)="sidebarToggle()"
+        aria-label="Toggle sidebar"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="navbar-toggler-icon icon-bar"></span>
+        <span class="navbar-toggler-icon icon-bar"></span>
+        <span class="navbar-toggler-icon icon-bar"></span>
+      </button>
+
+      <!-- Navbar content -->
+      <div class="collapse navbar-collapse justify-content-end" id="navigation">
+        
+        <!-- Search form -->
+        <form class="navbar-form" (submit)="$event.preventDefault(); onSearch()">
+          <div class="input-group no-border">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search..."
+              name="search"
+              aria-label="Search"
+            />
+            <button type="submit" class="btn btn-white btn-round btn-just-icon" aria-label="Submit search">
+              <i class="material-icons">search</i>
+            </button>
+          </div>
+        </form>
+
+        <!-- Nav items -->
+        <ul class="navbar-nav">
+
+          <!-- Dashboard -->
+         <li class="nav-item">
+  <a class="nav-link" [routerLink]="['/front']">
+    <i class="material-icons">dashboard</i>
+    <p><span class="d-lg-none d-md-block">Stats</span></p>
+  </a>
+</li>
+
+
+          <!-- Notifications dropdown -->
+      <li class="nav-item dropdown" [class.show]="notificationsOpen" style="position: relative;">
+  <a
+    class="nav-link"
+    href="#"
+    (click)="toggleNotifications($event)"
+    aria-haspopup="true"
+    [attr.aria-expanded]="notificationsOpen"
+    aria-label="Profil utilisateur"
+  >
+    <i class="material-icons">person</i>
+    <span class="badge bg-danger person-badge">1</span>
+    <p><span class="d-lg-none d-md-block">Mon Profil</span></p>
+  </a>
+
+  <div
+    class="dropdown-menu dropdown-menu-right p-3"
+    [class.show]="notificationsOpen"
+    style="min-width: 250px;"
+  >
+    <p class="mb-1"><strong>Nom :</strong> {{ user.firstName }} {{ user.lastName }}</p>
+    <p class="mb-1"><strong>Email :</strong> {{ user.email }}</p>
+    <p class="mb-1"><strong>Téléphone :</strong> {{ user.phoneNumber }}</p>
+    <p class="mb-1"><strong>Adresse :</strong> {{ user.address }}</p>
+  </div>
+</li>
+
+          <!-- User avatar + account menu -->
+          <li class="nav-item user-menu position-relative d-flex align-items-center">
+  <a
+    class="nav-link"
+    href="#"
+    (click)="$event.preventDefault()"
+    aria-label="Notifications"
+    title="Notifications"
+  >
+    <i class="material-icons">notifications</i>
+    <span class="d-lg-none d-md-block">Account</span>
+  </a>
+
+  <div class="ml-2">
+    <button
+      type="button"
+      (click)="toggleMenu()"
+      class="avatar-btn"
+      aria-haspopup="true"
+      [attr.aria-expanded]="menuOpen"
+      aria-label="User menu"
+    >
+      <img
+        src="/assets/avatar.jpg"
+        alt="Avatar"
+        class="avatar-img"
+      />
+    </button>
+
+    <div
+      *ngIf="menuOpen"
+      class="dropdown-menu-user shadow"
+      role="menu"
+      aria-label="User account menu"
+    >
+      <div class="dropdown-header px-3 py-2 border-bottom">
+        <p class="mb-0 font-weight-bold">{{ loggedInUserName }}</p>
+        <small class="text-muted">{{ userRole }}</small>
+      </div>
+      <button
+        (click)="onLogout()"
+class="btn btn-sm btn-secondary w-100 mt-2"
+        aria-label="Logout"
+      >
+        Logout
+      </button>
+    </div>
+  </div>
+</li>
+
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>

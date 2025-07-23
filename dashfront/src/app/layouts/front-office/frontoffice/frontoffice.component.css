@@ -1,0 +1,568 @@
+
+.notification-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  animation: fadeInOut 3s ease-in-out forwards;
+}
+
+.notification-success {
+  background-color: #28a745;
+}
+
+.notification-error {
+  background-color: #dc3545;
+}
+
+@keyframes fadeInOut {
+  0%   { opacity: 0; transform: translateY(-10px); }
+  10%  { opacity: 1; transform: translateY(0); }
+  90%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* les couleurs des nom evenements */
+.speaker .details h3 a {
+  background: linear-gradient(45deg, #72e4d9, #0b5ccf);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gradientShift 3s ease infinite;
+  font-weight: bold;
+  font-size: 1.3rem;
+  text-decoration: none;
+}
+
+/* Augmente la taille ici */
+.section-header h2 {
+  background: linear-gradient(45deg, #00d0bc, #010716);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gradientShift 3s ease infinite;
+  font-weight: bold;
+font-size: 2rem; /* Augmente la taille ici */
+
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+
+
+.section-header p {
+  color: black;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient-title {
+  background: linear-gradient(45deg, #01a6b2, #02646b);
+  background-size: 200% 200%;
+  
+  /* Propriétés pour le clipping du fond sur le texte */
+  -webkit-background-clip: text;
+  background-clip: text;
+  
+  /* Pour que le texte soit transparent et affiche le fond en dégradé */
+  -webkit-text-fill-color: transparent;
+  color: transparent; /* fallback */
+  
+  animation: gradientShift 3s ease infinite;
+  font-weight: bold;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+/* Pour rendre la navbar responsive (montre bouton hamburger sur mobile) */
+@media (max-width: 991.98px) {
+  #navbar {
+    display: none !important;
+  }
+}
+
+
+#logo {
+  flex-shrink: 0; /* Ne pas rétrécir */
+}
+
+#logo img {
+  width: 160px;
+  height: auto;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.6)); /* effet pour un peu plus "présent" */
+  cursor: pointer;
+}
+
+/* Animation pour le titre platform gestion des entreprises  */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  #hero {
+  text-align: center;
+  padding: 60px 20px;
+  background: #040082;
+}
+
+.hero-container h1 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  line-height: 1.3;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+  /*    le grand titre de la page  */
+
+.gestion-forum {
+  font-weight: bold;
+  font-size: 2.8rem;
+  background: linear-gradient(90deg, #02369f, #08ffef); /* dégradé bleu -> vert */
+  
+  /* Compatibilité background-clip pour le texte */
+  -webkit-background-clip: text; /* Chrome, Safari, Opera */
+  background-clip: text;          /* Standard */
+  
+  /* Couleur du texte transparente pour voir le dégradé */
+  -webkit-text-fill-color: transparent; /* Chrome, Safari, Opera */
+  color: transparent;                   /* Standard fallback */
+}
+
+
+.actualites-section {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 30px; /* négatif de la marge interne des colonnes */
+  margin-right: 30px;
+}
+
+.actualites-section > div {
+  padding-left: 12px;
+  padding-right: 12px;
+  margin-bottom: 40px; /* espace vertical entre les éléments */
+  box-sizing: border-box;
+}
+
+
+
+
+
+/* hedha lbloc taa evnemeent a venir*/
+
+
+.hotel-img {
+  position: relative;
+  width: 100%;
+  height: 200px; /* Même hauteur que les actualités */
+  overflow: hidden;
+}
+
+.hotel-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+.hotel-img:hover img {
+  transform: scale(1.1); /* léger zoom au survol */
+}
+
+/* Contenu caché par défaut */
+.overlay-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none; /* pour que le bouton ne gêne pas quand caché */
+}
+
+/* Affiche description + bouton au survol de l'image */
+.hotel-img:hover .overlay-content {
+  opacity: 1;
+  pointer-events: auto; /* bouton cliquable */
+}
+
+/* Styles du bouton */
+.overlay-content .btn {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.overlay-content h5 {
+  color: #fff !important;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+
+
+
+
+#hero {
+  background-image: url('assets/frontoffice/img/hero-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+}
+
+
+
+
+.comment-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  font-size: 0.85rem;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0 4px;
+}
+
+/* Au hover sur la zone .comment-wrapper, on montre la zone commentaires avec hauteur fixe */
+.comment-wrapper:hover .comment-container {
+  max-height: 120px; /* Hauteur fixe */
+  padding: 4px;
+  overflow-y: auto;  /* Scroll interne si dépassement */
+}
+
+
+
+
+
+/* Carte principale */
+.card {
+  width: 100%;
+  max-width: 320px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  padding: 0;
+  overflow: hidden;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}
+
+/* Conteneur image relatif pour overlay */
+.card .image-container {
+  position: relative;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+}
+
+/* Image */
+.card .image-container img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.card .image-container:hover img {
+  transform: scale(1.05);
+}
+
+/* Overlay au survol */
+.card .image-container .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.card .image-container:hover .overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Titre sur image */
+.card .overlay .card-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  margin: 0;
+}
+
+/* Zone d’actions (like, dislike, icônes) */
+.overlay .actions,
+.overlay .social {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+/* Boutons */
+.actions button {
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.actions .btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.actions .btn-primary {
+  background-color: #0d6efd;
+  color: white;
+}
+
+/* Icônes sociales */
+.social a {
+  font-size: 1.2rem;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.social a:hover {
+  color: #c3c3c4;
+}
+
+/* Corps de la carte */
+.card .card-body {
+  padding: 15px;
+  text-align: left;
+  background-color: white;
+  flex-grow: 1;
+}
+
+/* Description */
+.card .card-body p {
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+/* Commentaires */
+.comment {
+  border-top: 1px solid #ccc;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.comment .author {
+  font-weight: 600;
+}
+
+.comment .date {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+/* Champ commentaire */
+.cm input {
+  font-size: 0.85rem;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 6px;
+}
+
+.cm button {
+  width: 100%;
+  padding: 6px;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.cm button:hover {
+  background-color: #084298;
+}
+
+
+#venue {
+  background-color: white;
+  padding: 40px 0; /* Un peu d’espace autour */
+}
+
+
+
+
+
+
+
+
+
+#navbar ul li a {
+    color: white !important; /* Change la couleur du texte en blanc */
+}
+
+#navbar ul li a:hover {
+    color: #66b4bd !important; /* Change la couleur du texte au survol (orange) */
+}
+
+
+<!---->
+
+#navbar {
+    display: flex;
+    justify-content: flex-end; /* Aligne le navbar à droite */
+    width: 100%;
+}
+
+#navbar ul {
+    display: flex;
+    justify-content: flex-end; /* Aligne les éléments du menu à droite */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#navbar ul li {
+    margin: 0 8px; /* Ajoute un petit espace entre les éléments */
+}
+
+#navbar ul li a {
+    text-decoration: none;
+    color: rgb(60, 200, 218); /* Couleur du texte */
+    font-weight: bold;
+    padding: 5px 10px; /* Ajoute un peu d'espace autour des liens */
+}
+
+
+#logo {
+  
+    animation: blink 2s infinite; /* Animation logo lyance */
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1; /* Complètement visible */
+    }
+    50% {
+        opacity: 0; /* Complètement invisible */
+    }
+    100% {
+        opacity: 1; /* De nouveau visible */
+    }
+}
+   
+
+
+
+
+.buy-tickets {
+    position: fixed; /* Positionne le bouton de façon fixe */
+    right: 20px; /* Positionne le bouton à 20px du côté droit */
+    bottom: 20px; /* Positionne le bouton à 20px du bas de la page */
+    padding: 10px 20px; /* Ajoute un peu d'espace autour du texte du bouton */
+    background-color: transparent; /* Fond transparent */
+    color: rgb(66, 125, 157); /* Texte bleu */
+    border: 2px solid rgb(22, 142, 163); /* Bordure bleue */
+    border-radius: 5px; /* Bords arrondis */
+    font-weight: bold; /* Met le texte en gras */
+    text-decoration: none; /* Supprime le soulignement du lien */
+    transition: all 0.3s ease; /* Effet de transition pour les changements */
+}
+
+.buy-tickets:hover {
+    background-color: rgb(14, 181, 227); /* Fond bleu au survol */
+    color: white; /* Texte blanc au survol */
+    border-color: rgb(40, 142, 201); /* Bordure reste bleue */
+}
+
+
+
+.play-btn:hover {
+    background-color: darkblue; /* Couleur de fond bleu foncé au survol */
+}
+
+/* Style du bouton About platform */
+.about-btn {
+    display: inline-block; /* Assure que le bouton est un élément en ligne */
+    padding: 10px 20px; /* Espacement autour du texte */
+    background-color: rgb(18, 20, 20); /* Couleur de fond bleu */
+    color: white; /* Couleur du texte en blanc */
+    border-radius: 5px; /* Bord arrondi pour donner un effet plus doux */
+    font-weight: bold; /* Texte en gras */
+    text-decoration: none; /* Supprime le soulignement du lien */
+    transition: background-color 0.3s ease; /* Animation de transition pour le fond */
+}
+
+.about-btn:hover {
+    background-color: rgb(4, 6, 6); /* Couleur de fond bleu foncé au survol */
+}
+
+
+

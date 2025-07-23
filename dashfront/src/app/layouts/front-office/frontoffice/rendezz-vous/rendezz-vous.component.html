@@ -1,0 +1,48 @@
+<div class="container py-4">
+
+  <div *ngIf="isLoading" class="text-center">Chargement en cours...</div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+  <div *ngIf="!isLoading && rendezvousList.length === 0" class="alert alert-warning text-center">
+    Aucun rendez-vous planifié.
+  </div>
+
+  <div *ngFor="let rdv of rendezvousList" class="row schedule-item mb-3 align-items-center">
+    <div class="col-md-2 text-md-end mb-2 mb-md-0">
+      <time>{{ rdv.dateHeure | date:'dd/MM/yyyy HH:mm' }}</time>
+    </div>
+
+    <div class="col-md-8 d-flex align-items-center">
+      <div class="speaker me-3">
+        <img
+          [src]="rdv.candidature?.imageUrl || 'assets/frontoffice/img/speakers/default.jpg'"
+          [alt]="(rdv.candidature?.prenom || '') + ' ' + (rdv.candidature?.nom || '')"
+          class="rounded-circle"
+          width="60" height="60"
+          loading="lazy"
+        >
+      </div>
+      <div>
+        <p class="fw-bold fs-5 text-dark mb-1">
+          {{ rdv.candidature?.nom || 'Nom' }} {{ rdv.candidature?.prenom || 'Prénom' }}
+        </p>
+        <p class="text-info mb-0">
+          {{ rdv.candidature?.nomOffre || rdv.offre?.titre || 'Nom offre indisponible' }}
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-2 d-flex justify-content-end">
+      <button
+        class="btn d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm"
+        [ngClass]="isCurrentUserOwner(rdv) ? 'btn-info' : 'btn-secondary'"
+        [disabled]="!isCurrentUserOwner(rdv)"
+        (click)="navigateToEntretienvisio(rdv.tokenAcces || rdv.token, rdv)"
+        [title]="isCurrentUserOwner(rdv) ? 'Rejoindre l\'entretien en visio' : 'Vous ne pouvez participer qu\'à votre propre rendez-vous'"
+      >
+        <i class="fas fa-video"></i>
+        Participer
+      </button>
+    </div>
+  </div>
+
+</div>

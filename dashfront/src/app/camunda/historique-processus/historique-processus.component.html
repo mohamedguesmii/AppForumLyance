@@ -1,0 +1,52 @@
+<div class="container mt-4">
+  <h2 class="mb-4 text-primary">Historique des Processus</h2>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p>Chargement des données...</p>
+  </div>
+
+  <div *ngIf="!loading && historiques.length === 0" class="alert alert-info">
+    Aucun processus historique trouvé.
+  </div>
+
+  <div *ngIf="!loading && historiques.length > 0" class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Clé du Processus</th>
+          <th scope="col">Business Key</th>
+          <th scope="col">Début</th>
+          <th scope="col">Fin</th>
+          <th scope="col">État</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let h of historiques">
+          <td>{{ h.id }}</td>
+          <td>{{ h.processDefinitionKey }}</td>
+          <td>{{ h.businessKey || '-' }}</td>
+          <td>{{ h.startTime | date: 'short' }}</td>
+          <td>{{ h.endTime ? (h.endTime | date: 'short') : 'En cours...' }}</td>
+          <td>
+            <span [ngClass]="getStateBadgeColor(h.state)">
+              {{ h.state }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination simple -->
+    <div class="d-flex justify-content-between mt-3">
+      <button class="btn btn-outline-primary" (click)="previousPage()" [disabled]="page === 0">
+        ◀ Précédent
+      </button>
+      <span class="align-self-center">Page {{ page + 1 }}</span>
+      <button class="btn btn-outline-primary" (click)="nextPage()">
+        Suivant ▶
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,363 @@
+<div class="page-background">
+
+  <!-- Bouton Ajouter / Afficher le formulaire -->
+  <div class="d-flex justify-content-center mb-4">
+    <button
+      class="btn custom-gradient-btn shadow-sm"
+      (click)="showForm = !showForm"
+      aria-controls="formAddOffre"
+      [attr.aria-expanded]="showForm"
+    >
+      <i class="fas fa-plus me-2"></i>
+      {{ showForm ? 'Masquer le formulaire' : 'Ajouter une nouvelle offre' }}
+    </button>
+  </div>
+
+  <!-- Recherche -->
+  <div class="mb-5 text-center">
+    <input
+      type="text"
+      class="form-control w-50 mx-auto shadow-sm"
+      placeholder="🔍 Rechercher par titre ou lieu..."
+      [(ngModel)]="searchTerm"
+      (input)="resetPagination()"
+    />
+  </div>
+
+  <!-- Formulaire d'ajout -->
+  <div
+    *ngIf="showForm"
+    id="formAddOffre"
+    class="card p-4 mb-5 border-0 shadow-lg bg-light"
+    style="max-width: 900px; margin: auto;"
+  >
+    <div class="text-center mb-4">
+      <h4 class="btn-gradient py-2 rounded">
+        📝 Ajouter une Nouvelle Offre
+      </h4>
+    </div>
+
+    <form (ngSubmit)="soumettreOffre()" #offreForm="ngForm" novalidate>
+      <div class="row g-3">
+
+        <!-- Titre -->
+        <div class="col-md-6">
+          <label for="titre" class="form-label fw-semibold">Titre de l'offre <span class="text-danger">*</span></label>
+          <input
+            id="titre"
+            type="text"
+            class="form-control"
+            [(ngModel)]="nouvelleOffre.titre"
+            name="titre"
+            required minlength="3" maxlength="100"
+            #titre="ngModel"
+          />
+          <div *ngIf="titre.invalid && (titre.dirty || titre.touched)" class="text-danger small mt-1">
+            Titre requis (3 à 100 caractères).
+          </div>
+        </div>
+
+        <!-- Lieu 
+        <div class="col-md-6">
+          <label for="lieu" class="form-label fw-semibold">Lieu <span class="text-danger">*</span></label>
+          <input
+            id="lieu"
+            type="text"
+            class="form-control"
+            [(ngModel)]="nouvelleOffre.lieu"
+            name="lieu"
+            required
+            #lieu="ngModel"
+          />
+          <div *ngIf="lieu.invalid && (lieu.dirty || lieu.touched)" class="text-danger small mt-1">
+            Le lieu est obligatoire.
+          </div>
+        </div>
+-->
+        <!-- Domaine -->
+        <div class="col-md-6">
+          <label for="domaine" class="form-label fw-semibold">Domaine <span class="text-danger">*</span></label>
+          <input
+            id="domaine"
+            type="text"
+            class="form-control"
+            [(ngModel)]="nouvelleOffre.domaine"
+            name="domaine"
+            required
+            #domaine="ngModel"
+          />
+          <div *ngIf="domaine.invalid && (domaine.dirty || domaine.touched)" class="text-danger small mt-1">
+            Domaine obligatoire.
+          </div>
+        </div>
+
+        <!-- Type d'offre -->
+        <div class="col-md-6">
+          <label for="type" class="form-label fw-semibold">Type d'offre <span class="text-danger">*</span></label>
+          <select
+            id="type"
+            class="form-select"
+            [(ngModel)]="nouvelleOffre.type"
+            name="type"
+            required
+            #type="ngModel"
+          >
+            <option value="" disabled>-- Sélectionner --</option>
+            <option value="emploi">Emploi</option>
+            <option value="stage">Stage</option>
+          </select>
+          <div *ngIf="type.invalid && (type.dirty || type.touched)" class="text-danger small mt-1">
+            Veuillez sélectionner un type.
+          </div>
+        </div>
+
+        <!-- Durée stage (affiché uniquement si type=stage) -->
+        <div class="col-md-6" *ngIf="nouvelleOffre.type === 'stage'">
+          <label for="duree" class="form-label fw-semibold">Durée du stage</label>
+          <input
+            id="duree"
+            type="text"
+            class="form-control"
+            [(ngModel)]="nouvelleOffre.duree"
+            name="duree"
+            placeholder="Ex: 3 mois"
+          />
+        </div>
+
+
+        <!-- Date de publication -->
+        <div class="col-md-6">
+          <label for="datePublication" class="form-label fw-semibold">Date de publication <span class="text-danger">*</span></label>
+          <input
+            id="datePublication"
+            type="date"
+            class="form-control"
+            [(ngModel)]="nouvelleOffre.datePublication"
+            name="datePublication"
+            [max]="today"
+            required
+            #datePublication="ngModel"
+          />
+          <div *ngIf="datePublication.invalid && (datePublication.dirty || datePublication.touched)" class="text-danger small mt-1">
+            Date valide requise (pas dans le futur).
+          </div>
+        </div>
+
+        
+
+        <!-- Événement associé -->
+       <div class="form-group">
+  <label for="evenement">Événement associé</label>
+  <select
+    id="evenement"
+    class="form-control"
+    [(ngModel)]="nouvelleOffre.evenementId"
+    name="evenementId"
+    required
+  >
+    <option [ngValue]="null">-- Sélectionner un événement --</option>
+    <option *ngFor="let event of evenements" [ngValue]="event.idevent">
+      {{ event.title }} ({{ event.datedebut }})
+    </option>
+  </select>
+</div>
+
+
+        <!-- Description -->
+        <div class="col-12">
+          <label for="description" class="form-label fw-semibold">Entreprise <span class="text-danger">*</span></label>
+          <textarea
+            id="description"
+            class="form-control"
+            [(ngModel)]="nouvelleOffre.description"
+            name="description"
+            rows="5"
+            minlength="1"
+            maxlength="100"
+            required
+            #description="ngModel"
+            placeholder="Détaillez l'offre ici..."
+          ></textarea>
+          <div *ngIf="description.invalid && (description.dirty || description.touched)" class="text-danger small mt-1">
+            Description entre 1 et 1000 caractères requise.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Boutons -->
+      <div class="text-end mt-4">
+        <button
+          type="submit"
+          class="btn btn-success me-2 shadow-sm"
+          [disabled]="offreForm.invalid"
+        >
+          <i class="fas fa-check me-1"></i> Soumettre
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary shadow-sm"
+          (click)="annuler()"
+        >
+          <i class="fas fa-times me-1"></i> Annuler
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Liste des événements -->
+  <div class="evenements-container mb-5" style="max-width: 1000px; margin: auto; padding: 1rem;">
+   <h3 class="section-title">
+  🎯 Sélectionnez un événement pour créer une offre
+</h3>
+
+
+
+    <div class="grid-evenements">
+      <div *ngFor="let event of evenements; trackBy: trackById" class="card-event" (click)="ouvrirFormAvecEvent(event.idevent)">
+        <div class="image-wrapper">
+          <img 
+            [src]="event.imageUrl || 'assets/default-event.jpg'" 
+            [alt]="event.title || 'Événement sans titre'" 
+          />
+          <div class="info-overlay">
+            <p class="title">📌 {{ event.title || event.nom }}</p>
+            <p class="subtitle">📍 {{ event.adresse || event.lieu }}</p>
+            <p class="subtitle">📆 {{ event.datedebut | date: 'dd/MM/yyyy' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<style>
+
+  .section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000000; /* Bleu foncé professionnel */
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 2rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.section-title::after {
+  content: "";
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(to right, #6a0572, #b31269); /* Ligne décorative pro */
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+
+.page-background {
+  min-height: 100vh;
+  background: linear-gradient(135deg, rgba(57, 23, 52, 0.8), rgba(3, 104, 96, 0.8));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  color: #000000;
+  padding: 2rem;
+}
+
+
+
+ .grid-evenements {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Fixe à 4 colonnes */
+  gap: 1.5rem;
+}
+
+.card-event {
+  border-radius: 0; /* coins carrés */
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(233, 232, 232, 0.15);
+  background: linear-gradient(135deg, #b3ccc8, #ed8acc);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.card-event:hover {
+  transform: scale(1.02);
+}
+
+.image-wrapper {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+  border-radius: 0 !important; /* forcer carré même si Bootstrap est chargé */
+}
+
+.card-event:hover img {
+  transform: scale(1.05);
+}
+
+.info-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  padding: 1rem;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.card-event:hover .info-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: white; /* Titre en blanc */
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .grid-evenements {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .grid-evenements {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .grid-evenements {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+</style>

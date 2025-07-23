@@ -1,0 +1,393 @@
+<div class="container my-4">
+<h4 class="mb-2 text-center fw-bold" style="font-size: 2rem; color: #006a74;">
+  🛠️  validations Ressource Humaines
+</h4>
+
+  
+
+  <!-- Boutons de bascule entre statistiques -->
+
+
+  <div class="text-center mb2">
+    <button
+      class="btn me-2"
+      [class.btn-primary]="selectedStatType === 'offres'"
+      [class.btn-outline-primary]="selectedStatType !== 'offres'"
+      (click)="selectedStatType = 'offres'">
+      📊 Statistiques Offres
+    </button>
+    <button
+      class="btn"
+      [class.btn-success]="selectedStatType === 'candidatures'"
+      [class.btn-outline-success]="selectedStatType !== 'candidatures'"
+      (click)="selectedStatType = 'candidatures'">
+      🧾 Statistiques Candidatures
+    </button>
+  </div>
+ 
+
+  <!-- Statistiques Offres -->
+ <section *ngIf="!loading && selectedStatType === 'offres'" aria-label="Statistiques Offres" class="mb-4" role="region">
+  <h3 class="text-center text-primary" style="font-size: 1.25rem; margin-bottom: 1rem;">📦 Statistiques des Offres</h3>
+  <div class="d-flex justify-content-center flex-wrap gap-3">
+    <div class="stat-card border-primary text-primary shadow-sm rounded text-center p-2" style="min-width: 90px; font-size: 0.8rem; border-width: 1px;">
+      <h6 class="mb-1 fw-semibold" style="font-size: 0.75rem; margin-bottom: 0.2rem;">Total</h6>
+      <div class="fw-bold" style="font-size: 1.1rem; margin: 0;">{{ totalOffres }}</div>
+    </div>
+    <div class="stat-card border-success text-success shadow-sm rounded text-center p-2" style="min-width: 90px; font-size: 0.8rem; border-width: 1px;">
+      <h6 class="mb-1 fw-semibold" style="font-size: 0.75rem; margin-bottom: 0.2rem;">Validés</h6>
+      <div class="fw-bold" style="font-size: 1.1rem; margin: 0;">{{ offresValides }}</div>
+    </div>
+    <div class="stat-card border-danger text-danger shadow-sm rounded text-center p-2" style="min-width: 90px; font-size: 0.8rem; border-width: 1px;">
+      <h6 class="mb-1 fw-semibold" style="font-size: 0.75rem; margin-bottom: 0.2rem;">Refusés</h6>
+      <div class="fw-bold" style="font-size: 1.1rem; margin: 0;">{{ offresRefuses }}</div>
+    </div>
+    <div class="stat-card border-warning text-warning shadow-sm rounded text-center p-2" style="min-width: 90px; font-size: 0.8rem; border-width: 1px;">
+      <h6 class="mb-1 fw-semibold" style="font-size: 0.75rem; margin-bottom: 0.2rem;">En attente</h6>
+      <div class="fw-bold" style="font-size: 1.1rem; margin: 0;">{{ offresEnAttente }}</div>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex justify-content-center">
+    <canvas #offresCanvas id="offresChart" width="950" height="250" aria-label="Graphique des statistiques des offres" role="img"></canvas>
+  </div>
+</section>
+
+
+  <!-- Statistiques Candidatures -->
+  <section *ngIf="!loading && selectedStatType === 'candidatures'" aria-label="Statistiques Candidatures" class="mb-4" role="region">
+  <h3 class="text-center text-success" style="font-size: 1.25rem; margin-bottom: 1rem;">🧾 Statistiques des Candidatures</h3>
+  <div class="d-flex justify-content-center flex-wrap gap-3">
+    <div class="stat-card border-primary text-primary shadow-sm rounded text-center p-2" style="min-width: 90px; font-size: 0.8rem; border-width: 1px;">
+      <h6 class="mb-1 fw-semibold" style="font-size: 0.75rem; margin-bottom: 0.2rem;">Total</h6>
+      <div class="fw-bold" style="font-size: 1.1rem; margin: 0;">{{ totalCandidatures }}</div>
+    </div>
+    <div class="stat-card border-success text-success shadow-sm rounded text-center p-2" style="min-width: 90px; font-size: 0.8rem; border-width: 1px;">
+      <h6 class="mb-1 fw-semibold" style="font-size: 0.75rem; margin-bottom: 0.2rem;">Validés</h6>
+      <div class="fw-bold" style="font-size: 1.1rem; margin: 0;">{{ candidaturesValides }}</div>
+    </div>
+    <div class="stat-card border-danger text-danger shadow-sm rounded text-center p-2" style="min-width: 90px; font-size: 0.8rem; border-width: 1px;">
+      <h6 class="mb-1 fw-semibold" style="font-size: 0.75rem; margin-bottom: 0.2rem;">Refusés</h6>
+      <div class="fw-bold" style="font-size: 1.1rem; margin: 0;">{{ candidaturesRefuses }}</div>
+    </div>
+    <div class="stat-card border-warning text-warning shadow-sm rounded text-center p-2" style="min-width: 90px; font-size: 0.8rem; border-width: 1px;">
+      <h6 class="mb-1 fw-semibold" style="font-size: 0.75rem; margin-bottom: 0.2rem;">En attente</h6>
+      <div class="fw-bold" style="font-size: 1.1rem; margin: 0;">{{ candidaturesEnAttente }}</div>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex justify-content-center">
+    <canvas #candidaturesCanvas id="candidaturesChart" width="950" height="250" aria-label="Graphique des statistiques des candidatures" role="img"></canvas>
+  </div>
+</section>
+
+ 
+
+<hr style="width: 700px; border: 2px solid #000000; margin: 0 auto 1.5rem;">
+
+ 
+
+  <!-- Chargement -->
+  <div *ngIf="loading" class="text-center my-5" aria-live="polite" aria-busy="true" role="alert">
+    <div class="spinner-border text-primary" role="status" aria-label="Chargement">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <!-- Offres et Candidatures côte à côte -->
+  <section *ngIf="!loading && !displayInlineDetails" class="row gx-4" role="region" aria-label="Offres et candidatures à valider">
+    <!-- Offres -->
+    <article class="col-lg-6 mb-4" aria-label="Liste des offres" role="region">
+      <h3 class="mb-3 text-center">
+        <i class="bi bi-briefcase-fill me-2 text-secondary"></i> Offres
+      </h3>
+      <table class="table table-striped table-bordered align-middle" aria-describedby="offresTableCaption">
+        <caption id="offresTableCaption">Liste des offres à valider</caption>
+        <thead class="table-dark">
+          <tr>
+            <th>Nom de la tâche</th>
+            <th>Statut</th>
+            <th class="text-center" style="width: 180px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let offre of filteredTasks(offres) ?? []">
+            <td>{{ offre.name }}</td>
+            <td><span [ngClass]="getBadgeClass(offre.statut)">{{ offre.statut }}</span></td>
+            <td class="text-center">
+              <button class="btn btn-success btn-sm me-1" 
+                      (click)="complete(offre.id, 'VALIDÉ')" 
+                      [disabled]="offre.statut==='VALIDÉ'" 
+                      [attr.aria-label]="'Valider l\'offre ' + offre.name">
+                Valider
+              </button>
+              <button class="btn btn-danger btn-sm me-1" 
+                      (click)="complete(offre.id, 'REFUSÉ')" 
+                      [disabled]="offre.statut==='REFUSÉ'" 
+                      [attr.aria-label]="'Refuser l\'offre ' + offre.name">
+                Refuser
+              </button>
+              <button class="btn btn-outline-secondary btn-sm me-1" 
+                      (click)="deleteProcess(offre)" 
+                      [attr.aria-label]="'Supprimer le processus de l\'offre ' + offre.name">
+                Supprimer
+              </button>
+              <button class="btn btn-info btn-sm" 
+                      (click)="goToDetails(offre)" 
+                      [attr.aria-label]="'Voir les détails de l\'offre ' + offre.name">
+                Détails
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="(filteredTasks(offres) ?? []).length === 0">
+            <td colspan="3" class="text-center fst-italic">Aucune offre à afficher</td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+
+    
+
+    <!-- Candidatures -->
+    <article class="col-lg-6 mb-4" aria-label="Liste des candidatures" role="region">
+      <h3 class="mb-3 text-center">
+        <i class="bi bi-person-fill me-2 text-info"></i> Candidatures
+      </h3>
+      <table class="table table-striped table-bordered align-middle" aria-describedby="candidaturesTableCaption">
+        <caption id="candidaturesTableCaption">Liste des candidatures à valider</caption>
+        <thead class="table-dark">
+          <tr>
+            <th>Nom de la tâche</th>
+            <th>Statut</th>
+            <th class="text-center" style="width: 180px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cand of filteredTasks(candidatures) ?? []">
+            <td>{{ cand.name }}</td>
+            <td><span [ngClass]="getBadgeClass(cand.statut)">{{ cand.statut }}</span></td>
+            <td class="text-center">
+              <button class="btn btn-success btn-sm me-1" 
+                      (click)="complete(cand.id, 'VALIDÉ')" 
+                      [disabled]="cand.statut==='VALIDÉ'" 
+                      [attr.aria-label]="'Valider la candidature ' + cand.name">
+                Valider
+              </button>
+              <button class="btn btn-danger btn-sm me-1" 
+                      (click)="complete(cand.id, 'REFUSÉ')" 
+                      [disabled]="cand.statut==='REFUSÉ'" 
+                      [attr.aria-label]="'Refuser la candidature ' + cand.name">
+                Refuser
+              </button>
+              <button class="btn btn-outline-secondary btn-sm me-1" 
+                      (click)="deleteProcess(cand)" 
+                      [attr.aria-label]="'Supprimer le processus de la candidature ' + cand.name">
+                Supprimer
+              </button>
+              <button class="btn btn-info btn-sm" 
+                      (click)="goToDetails(cand)" 
+                      [attr.aria-label]="'Voir les détails de la candidature ' + cand.name">
+                Détails
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="(filteredTasks(candidatures) ?? []).length === 0">
+            <td colspan="3" class="text-center fst-italic">Aucune candidature à afficher</td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+  </section>
+
+
+  <div *ngIf="displayInlineDetails" role="region" aria-label="Détails du processus sélectionné" class="mb-4">
+  <h3>Détails du processus</h3>
+  <p><strong>Titre :</strong> {{ item?.titre || item?.name }}</p>
+  <p><strong>Statut :</strong> <span [ngClass]="getBadgeClass(item?.statut || '')">{{ item?.statut }}</span></p>
+
+  <h4>Variables de la tâche (contraintes / données)</h4>
+  <pre *ngIf="taskVariables">{{ taskVariables | json }}</pre>
+  <p *ngIf="!taskVariables">Chargement des variables...</p>
+
+  <button *ngIf="item?.id" (click)="complete(item.id, 'VALIDÉ')">Valider</button>
+  <button *ngIf="item?.id" (click)="complete(item.id, 'REFUSÉ')">Refuser</button>
+  <button (click)="closeDetails()">Fermer</button>
+</div>
+
+
+  <!-- Affichage inline détails processus -->
+  <section *ngIf="displayInlineDetails && selectedProcessId" class="mb-4" role="region" aria-label="Détails du processus sélectionné">
+    <button class="btn btn-secondary mb-3" (click)="closeDetails()" aria-label="Retour à la liste des validations">← Retour à la liste</button>
+
+    <h3>Détails du processus</h3>
+    <p><strong>Type :</strong> {{ selectedProcessType }}</p>
+    <p><strong>Process Instance ID :</strong> {{ selectedProcessId }}</p>
+
+    <div class="alert alert-info" role="note">
+      Ici, affiche les détails du processus et workflow monitoring en mode inline.<br>
+      (À implémenter selon ta logique métier)
+    </div>
+
+    <button class="btn btn-primary mt-3" (click)="goToWorkflowMonitoring()" aria-label="Voir Monitoring Workflow">
+      Voir Monitoring Workflow
+    </button>
+  </section>
+
+  <!-- Bouton Détails complets, protégé -->
+  <button *ngIf="item?.processInstanceId" class="btn btn-outline-primary btn-sm"
+          (click)="goToProcessDetails(item.processInstanceId)"
+          [attr.aria-label]="'Voir détails complets du processus ' + item.processInstanceId">
+    Détails complets
+  </button>
+
+  <div class="d-flex justify-content-end mb-3 gap-2" role="region" aria-label="Navigation secondaire">
+    <button class="btn btn-outline-info" (click)="goToWorkflowMonitoring()" aria-label="Ouvrir Monitoring Workflow">🧩  Monitoring</button>
+    <button class="btn btn-outline-secondary" (click)="goToHistorique()" aria-label="Ouvrir Historique">📜 Historique</button>
+<button class="btn btn-sm btn-outline-primary"
+        (click)="item?.processInstanceId && goToProcessDetails(item.processInstanceId)"
+        [attr.aria-label]="'Voir détails complets du processus ' + (item?.processInstanceId || '')">
+  🔍 Voir Détails
+</button>
+
+
+
+  </div>
+
+  <!-- Boutons valider/refuser protégé par *ngIf task -->
+  <div *ngIf="task" role="region" aria-label="Actions de validation">
+    <button class="btn btn-success btn-sm me-1" (click)="complete(task.id, 'VALIDÉ')" aria-label="Valider la tâche courante">✅ Valider</button>
+    <button class="btn btn-danger btn-sm" (click)="complete(task.id, 'REFUSÉ')" aria-label="Refuser la tâche courante">❌ Refuser</button>
+  </div>
+
+  <!-- Historique des offres / candidatures -->
+  <section aria-label="Historique des processus" class="mt-4" role="region">
+    <button class="btn btn-primary mb-3" 
+            (click)="showHistoriqueSection = showHistoriqueSection === 'offres' ? 'candidatures' : 'offres'"
+            [attr.aria-pressed]="showHistoriqueSection === 'offres'"
+            aria-label="Changer la vue de l'historique entre offres et candidatures">
+      Voir Historique : {{ showHistoriqueSection === 'offres' ? 'Candidatures' : 'Offres' }}
+    </button>
+
+    <div *ngIf="showHistoriqueSection === 'offres'">
+      <h3>Historique des Offres</h3>
+      <table class="table table-striped table-bordered align-middle" aria-describedby="historiqueOffresCaption">
+        <caption id="historiqueOffresCaption">Historique des offres</caption>
+        <thead class="table-secondary">
+          <tr>
+            <th>Titre</th>
+            <th>Statut</th>
+            <th>Date dernière action</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let offre of offresHistorique ?? []">
+            <td>{{ offre.titre }}</td>
+            <td><span [ngClass]="getBadgeClass(offre.statut)">{{ offre.statut }}</span></td>
+            <td>{{ offre.dateDerniereAction ? (offre.dateDerniereAction | date:'dd/MM/yyyy HH:mm') : '-' }}</td>
+            <td>
+              <button class="btn btn-info btn-sm" 
+                      (click)="goToDetails(offre)" 
+                      [attr.aria-label]="'Voir les détails de l\'offre ' + offre.titre">
+                Détails
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="(offresHistorique ?? []).length === 0">
+            <td colspan="4" class="text-center fst-italic">Aucun historique d'offres à afficher</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="showHistoriqueSection === 'candidatures'">
+      <h3>Historique des Candidatures</h3>
+      <table class="table table-striped table-bordered align-middle" aria-describedby="historiqueCandidaturesCaption">
+        <caption id="historiqueCandidaturesCaption">Historique des candidatures</caption>
+        <thead class="table-secondary">
+          <tr>
+            <th>Titre</th>
+            <th>Statut</th>
+            <th>Date dernière action</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cand of candidaturesHistorique ?? []">
+            <td>{{ cand.titre }}</td>
+            <td><span [ngClass]="getBadgeClass(cand.statut)">{{ cand.statut }}</span></td>
+            <td>{{ cand.dateDerniereAction ? (cand.dateDerniereAction | date:'dd/MM/yyyy HH:mm') : '-' }}</td>
+            <td>
+              <button class="btn btn-info btn-sm" 
+                      (click)="goToDetails(cand)" 
+                      [attr.aria-label]="'Voir les détails de la candidature ' + cand.titre">
+                Détails
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="(candidaturesHistorique ?? []).length === 0">
+            <td colspan="4" class="text-center fst-italic">Aucun historique de candidatures à afficher</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* Stat cards */
+ .stat-card {
+  min-width: 70px;        /* Réduit la largeur minimale */
+  max-width: 90px;        /* Réduit la largeur maximale */
+  padding: 0.3rem 0.5rem; /* Réduit l’espace interne (haut/bas, gauche/droite) */
+  font-size: 0.75rem;     /* Réduit la taille du texte global */
+  border-width: 1px;      /* Réduit l’épaisseur de la bordure */
+  border-radius: 0.4rem;  /* Arrondit légèrement le cadre */
+  text-align: center;
+}
+
+
+  /* List-group style */
+  .list-group-item {
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .list-group-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .progress {
+    height: 20px;
+    border-radius: 12px;
+    background-color: #e9ecef;
+  }
+  .progress-bar {
+    font-weight: 100;
+    font-size: 0.5rem;
+    line-height: 20px;
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  /* Badges */
+  .badge {
+    padding: 0.4rem 1rem;
+    border-radius: 0.6rem;
+    font-weight: 100;
+    font-size: 1rem;
+    color: white;
+  }
+  .bg-primary { background-color: #0d6efd !important; }
+  .bg-success { background-color: #198754 !important; }
+  .bg-danger { background-color: #dc3545 !important; }
+  .bg-warning { background-color: #ffc107 !important; color: #212529 !important; }
+  .bg-secondary { background-color: #6c757d !important; }
+
+  /* Responsive */
+  @media (max-width: 468px) {
+    .col-lg-6 {
+      max-width: 100% !important;
+      flex: 0 0 100% !important;
+    }
+  }
+</style>

@@ -1,0 +1,77 @@
+.notification-toast {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  max-width: 320px;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  color: white;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.7); /* fond noir translucide */
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1050;
+  pointer-events: none; /* bloquer interaction quand caché */
+}
+
+.notification-toast.show {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto; /* réactiver interaction */
+}
+
+.toast-success {
+  background: rgba(252, 225, 20, 0.834); /* vert translucide */
+}
+
+.toast-error {
+  background: rgba(220, 53, 69, 0.85); /* rouge translucide */
+}
+
+.toast-message {
+  flex: 1;
+  padding-right: 1rem;
+  font-size: 0.95rem;
+}
+
+.toast-close-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  font-weight: 700;
+  user-select: none;
+}
+
+
+
+
+@media (max-width: 767px) {
+  #back-button {
+    top: 10px;
+    left: 10px;
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+@media (max-width: 767px) {
+  #hero > .container {
+    padding: 1rem;
+  }
+
+  form,
+  .preview-panel {
+    border-left: none !important;
+    width: 100% !important;
+    box-shadow: none !important;
+  }
+}

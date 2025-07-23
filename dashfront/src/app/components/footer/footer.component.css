@@ -1,0 +1,43 @@
+footer.footer {
+  background: linear-gradient(to right, #000000, #87ceeb); /* même dégradé que la navbar */
+  border-top: 1px solid #ddd; /* cadre léger en haut */
+  padding: 1rem 0;
+  color: white;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* léger ombrage au-dessus */
+  font-size: 0.9rem;
+}
+
+footer.footer a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+footer.footer a:hover {
+  color: #b3d9ff; /* même bleu clair que navbar au hover */
+}
+
+footer.footer .container-fluid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer.footer nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 1.5rem;
+}
+
+footer.footer nav ul li {
+  display: inline;
+}
+
+footer.footer .copyright {
+  font-weight: 400;
+}

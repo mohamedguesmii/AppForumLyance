@@ -1,0 +1,149 @@
+/* Formulaire offre */
+.container.mt-5.p-4 {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-label i {
+  min-width: 18px;
+  text-align: center;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* couleur de button */
+.custom-gradient-btn {
+  background: linear-gradient(90deg, #05877e, #1b2730); /* Vert à bleu */
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: 0.3s ease;
+}
+
+.custom-gradient-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+/* couleur de titre */
+
+.gradient-title {
+  font-weight: 900;
+  font-size: 1.5rem;
+  background: linear-gradient(90deg, #dee3e4, #6ba7f0, #00ffaa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.icon {
+  font-size: 1.5rem;       /* Même taille que le texte */
+  margin-right: 0.4rem;    /* Espacement */
+  vertical-align: middle;  /* Aligner avec le texte */
+}
+
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-image: url('assets/frontoffice/img/jj.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.offres-container {
+  background: linear-gradient(135deg, rgba(0, 9, 9, 0.8), rgba(7, 123, 134, 0.8));
+  border-radius: 12px;
+  color: #fff;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 3rem 2rem;
+
+  /* Flou arrière-plan */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  /* Bordure fine translucide */
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Conteneurs côte à côte */
+.offres-side-by-side {
+  display: flex;
+  gap: 2rem;
+  /* Permet à chaque container de prendre 50% max */
+  flex-wrap: wrap;
+}
+
+.offres-emploi-container,
+.offres-stage-container {
+  flex: 1 1 48%; /* largeur flexible, environ la moitié */
+  min-width: 300px; /* pour que ça reste lisible sur petits écrans */
+  max-height: 75vh; /* limiter la hauteur */
+  overflow-y: auto; /* barre de scroll verticale si trop grand */
+  padding-right: 1rem;
+}
+
+/* Style titres des sections */
+.offres-emploi-container h3,
+.offres-stage-container h3 {
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+
+
+/* Cards Offres */
+.card {
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.card-emploi {
+  border-left: 5px solid #0d47a1;
+}
+
+.card-stage {
+  border-left: 5px solid #ef6c00;
+}
+
+/* Boutons */
+.btn-outline-primary, .btn-outline-warning {
+  font-weight: 600;
+}
+
+/* Texte "aucune offre" */
+.text-light.fst-italic {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Scrollbar personnalisée (optionnel) */
+.offres-emploi-container::-webkit-scrollbar,
+.offres-stage-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.offres-emploi-container::-webkit-scrollbar-thumb,
+.offres-stage-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255,255,255,0.3);
+  border-radius: 4px;
+}
+
+.offres-emploi-container::-webkit-scrollbar-track,
+.offres-stage-container::-webkit-scrollbar-track {
+  background: transparent;
+}

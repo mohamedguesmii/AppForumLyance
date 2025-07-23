@@ -1,0 +1,204 @@
+.register-container {
+  background-image: url('assets/frontoffice/img/jj.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.custom-blue-btn {
+  background-color: #0d6efd; /* bleu Bootstrap */
+  color: white !important;
+  border: none;
+  text-transform: uppercase; /* Tout en majuscules */
+}
+
+.custom-blue-btn::first-letter {
+  text-transform: uppercase;       /* première lettre en majuscule */
+}
+
+.custom-blue-btn:hover:enabled {
+  background-color: #084298; /* bleu plus foncé au survol */
+}
+
+.custom-blue-btn:disabled {
+  background-color: #000000; /* gris pour bouton désactivé */
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+
+
+
+/* Style global des champs */
+.form-floating .form-control {
+  border-radius: 0.75rem;
+  border: 1px solid #dee2e6;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  font-size: 0.95rem;
+  padding-left: 2.75rem; /* Espace pour l’icône */
+}
+
+.form-floating .form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+}
+
+.form-floating label {
+  font-size: 0.9rem;
+  padding-left: 2.75rem;
+  color: #6c757d;
+}
+
+/* Icône à gauche dans les champs */
+.form-floating .bi {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #0d6efd;
+  font-size: 1.2rem;
+  z-index: 3;
+  background-color: transparent;
+}
+
+/* Bouton pour mot de passe */
+.password-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #0d6efd;
+  font-size: 1.2rem;
+  z-index: 3;
+}
+
+/* Icônes de validation */
+.valid-icon,
+.invalid-icon {
+  position: absolute;
+  right: 2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  z-index: 3;
+}
+
+.valid-icon { color: green; }
+.invalid-icon { color: red; }
+
+/* Messages d'erreur */
+.invalid-feedback {
+  font-size: 0.8rem;
+  color: #dc3545;
+}
+
+/* Info bulles / force mot de passe */
+small.text-muted {
+  font-size: 0.75rem;
+}
+
+/* Style général de la carte */
+.register-form {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 1rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.01);
+}
+
+/* Focus universel */
+input:focus, button:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+
+/* Style global des champs */
+.form-floating .form-control {
+  border-radius: 0.75rem;
+  border: 1px solid #dee2e6;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  font-size: 0.95rem;
+  padding-left: 2.75rem; /* Espace pour l’icône */
+}
+
+.form-floating .form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+}
+
+.form-floating label {
+  font-size: 0.9rem;
+  padding-left: 2.75rem;
+  color: #6c757d;
+}
+
+/* Icône à gauche dans les champs */
+.form-floating .bi {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #0d6efd;
+  font-size: 1.2rem;
+  z-index: 3;
+  background-color: transparent;
+}
+
+/* Bouton pour mot de passe */
+.password-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #0d6efd;
+  font-size: 1.2rem;
+  z-index: 3;
+}
+
+/* Icônes de validation */
+.valid-icon,
+.invalid-icon {
+  position: absolute;
+  right: 2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  z-index: 3;
+}
+
+.valid-icon { color: green; }
+.invalid-icon { color: red; }
+
+/* Messages d'erreur */
+.invalid-feedback {
+  font-size: 0.8rem;
+  color: #dc3545;
+}
+
+/* Info bulles / force mot de passe */
+small.text-muted {
+  font-size: 0.75rem;
+}
+
+/* Style général de la carte */
+.register-form {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 1rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.01);
+}
+
+/* Focus universel */
+input:focus, button:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
