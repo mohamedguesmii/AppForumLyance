@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  id="Definitions_1"
+                  targetNamespace="http://bpmn.io/schema/bpmn"
+                  exporter="Camunda Modeler"
+                  exporterVersion="5.36.1">
+
+    <bpmn:process id="process_validation_offres" name="Validation Offres" isExecutable="true" camunda:historyTimeToLive="30">
+
+        <bpmn:startEvent id="startEvent" name="Offre reçue">
+            <bpmn:outgoing>flow_to_preselection</bpmn:outgoing>
+        </bpmn:startEvent>
+
+        <bpmn:userTask id="preselectionRH" name="Pré-sélection par RH" camunda:candidateGroups="rh">
+            <bpmn:incoming>flow_to_preselection</bpmn:incoming>
+            <bpmn:outgoing>flow_to_gateway_conditions</bpmn:outgoing>
+        </bpmn:userTask>
+
+        <bpmn:sequenceFlow id="flow_to_preselection" sourceRef="startEvent" targetRef="preselectionRH" />
+
+        <bpmn:exclusiveGateway id="gatewayConditions" name="Offre compatible ET score > 50 ?">
+            <bpmn:incoming>flow_to_gateway_conditions</bpmn:incoming>
+            <bpmn:outgoing>flow_to_validationRH</bpmn:outgoing>
+            <bpmn:outgoing>flow_to_refusNotification</bpmn:outgoing>
+        </bpmn:exclusiveGateway>
+
+        <bpmn:sequenceFlow id="flow_to_gateway_conditions" sourceRef="preselectionRH" targetRef="gatewayConditions" />
+
+        <bpmn:sequenceFlow id="flow_to_validationRH" sourceRef="gatewayConditions" targetRef="validationRH">
+            <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">
+                <![CDATA[
+          ${offreCorrespondAuForum == true && score > 50}
+        ]]>
+            </bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+
+        <bpmn:sequenceFlow id="flow_to_refusNotification" sourceRef="gatewayConditions" targetRef="notificationRefus">
+            <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">
+                <![CDATA[
+          ${!(offreCorrespondAuForum == true && score > 50)}
+        ]]>
+            </bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+
+        <bpmn:userTask id="validationRH" name="Validation RH" camunda:candidateGroups="rh">
+            <bpmn:incoming>flow_to_validationRH</bpmn:incoming>
+            <bpmn:outgoing>flow_to_decisionRH</bpmn:outgoing>
+        </bpmn:userTask>
+
+        <bpmn:serviceTask id="notificationRefus" name="Notification refus" camunda:delegateExpression="${notificationDelegate}">
+            <bpmn:incoming>flow_to_refusNotification</bpmn:incoming>
+            <bpmn:outgoing>flow_to_endRefus</bpmn:outgoing>
+        </bpmn:serviceTask>
+
+        <bpmn:endEvent id="endRefus" name="Offre refusée">
+            <bpmn:incoming>flow_to_endRefus</bpmn:incoming>
+        </bpmn:endEvent>
+
+        <bpmn:sequenceFlow id="flow_to_endRefus" sourceRef="notificationRefus" targetRef="endRefus" />
+
+        <bpmn:exclusiveGateway id="gatewayDecisionRH" name="Offre acceptée par RH ?">
+            <bpmn:incoming>flow_to_decisionRH</bpmn:incoming>
+            <bpmn:outgoing>flow_to_accept</bpmn:outgoing>
+            <bpmn:outgoing>flow_to_reject</bpmn:outgoing>
+        </bpmn:exclusiveGateway>
+
+        <bpmn:sequenceFlow id="flow_to_decisionRH" sourceRef="validationRH" targetRef="gatewayDecisionRH" />
+
+        <bpmn:serviceTask id="acceptOffre" name="Mise à jour Offre Acceptée" camunda:delegateExpression="${miseAJourOffreDelegate}">
+            <bpmn:incoming>flow_to_accept</bpmn:incoming>
+            <bpmn:outgoing>flow_accept_to_endAccept</bpmn:outgoing>
+        </bpmn:serviceTask>
+
+        <bpmn:endEvent id="endAccept" name="Offre acceptée">
+            <bpmn:incoming>flow_accept_to_endAccept</bpmn:incoming>
+        </bpmn:endEvent>
+
+        <bpmn:sequenceFlow id="flow_to_accept" sourceRef="gatewayDecisionRH" targetRef="acceptOffre">
+            <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">
+                <![CDATA[
+          ${validation == 'accepte'}
+        ]]>
+            </bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+
+        <bpmn:serviceTask id="rejectOffre" name="Mise à jour Offre Rejetée" camunda:delegateExpression="${miseAJourOffreDelegate}">
+            <bpmn:incoming>flow_to_reject</bpmn:incoming>
+            <bpmn:outgoing>flow_reject_to_endReject</bpmn:outgoing>
+        </bpmn:serviceTask>
+
+        <bpmn:endEvent id="endReject" name="Offre refusée">
+            <bpmn:incoming>flow_reject_to_endReject</bpmn:incoming>
+        </bpmn:endEvent>
+
+        <bpmn:sequenceFlow id="flow_to_reject" sourceRef="gatewayDecisionRH" targetRef="rejectOffre">
+            <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">
+                <![CDATA[
+          ${validation == 'rejete'}
+        ]]>
+            </bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+
+        <bpmn:sequenceFlow id="flow_accept_to_endAccept" sourceRef="acceptOffre" targetRef="endAccept" />
+        <bpmn:sequenceFlow id="flow_reject_to_endReject" sourceRef="rejectOffre" targetRef="endReject" />
+
+    </bpmn:process>
+
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="process_validation_offres">
+            <!-- Shapes and edges preserved as in original -->
+            <bpmndi:BPMNShape id="gatewayConditions_di" bpmnElement="gatewayConditions" isMarkerVisible="true">
+                <dc:Bounds x="560" y="245" width="50" height="50" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="544" y="207.5" width="81" height="27" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="validationRH_di" bpmnElement="validationRH">
+                <dc:Bounds x="670" y="220" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="preselectionRH_di" bpmnElement="preselectionRH">
+                <dc:Bounds x="320" y="220" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="startEvent_di" bpmnElement="startEvent">
+                <dc:Bounds x="162" y="240" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="152" y="303" width="56" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="notificationRefus_di" bpmnElement="notificationRefus">
+                <dc:Bounds x="535" y="400" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="gatewayDecisionRH_di" bpmnElement="gatewayDecisionRH" isMarkerVisible="true">
+                <dc:Bounds x="845" y="210" width="50" height="50" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="778.5" y="186" width="73" height="27" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="rejectOffre_di" bpmnElement="rejectOffre">
+                <dc:Bounds x="930" y="320" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="endReject_di" bpmnElement="endReject">
+                <dc:Bounds x="1242" y="262" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="1237" y="313" width="65" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="endAccept_di" bpmnElement="endAccept">
+                <dc:Bounds x="1242" y="162" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="1233" y="214" width="73" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="acceptOffre_di" bpmnElement="acceptOffre">
+                <dc:Bounds x="930" y="80" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="endRefus_di" bpmnElement="endRefus">
+                <dc:Bounds x="732" y="512" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="717" y="563" width="65" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="flow_to_preselection_di" bpmnElement="flow_to_preselection">
+                <di:waypoint x="198" y="258" />
+                <di:waypoint x="320" y="258" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flow_to_gateway_conditions_di" bpmnElement="flow_to_gateway_conditions">
+                <di:waypoint x="420" y="258" />
+                <di:waypoint x="490" y="258" />
+                <di:waypoint x="490" y="268" />
+                <di:waypoint x="562" y="268" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flow_to_validationRH_di" bpmnElement="flow_to_validationRH">
+                <di:waypoint x="608" y="268" />
+                <di:waypoint x="640" y="268" />
+                <di:waypoint x="640" y="298" />
+                <di:waypoint x="674" y="298" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flow_to_refusNotification_di" bpmnElement="flow_to_refusNotification">
+                <di:waypoint x="585" y="295" />
+                <di:waypoint x="585" y="400" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flow_to_endRefus_di" bpmnElement="flow_to_endRefus">
+                <di:waypoint x="635" y="440" />
+                <di:waypoint x="750" y="440" />
+                <di:waypoint x="750" y="512" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flow_to_decisionRH_di" bpmnElement="flow_to_decisionRH">
+                <di:waypoint x="770" y="260" />
+                <di:waypoint x="790" y="260" />
+                <di:waypoint x="790" y="230" />
+                <di:waypoint x="850" y="230" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flow_to_accept_di" bpmnElement="flow_to_accept">
+                <di:waypoint x="870" y="210" />
+                <di:waypoint x="870" y="120" />
+                <di:waypoint x="930" y="120" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flow_to_reject_di" bpmnElement="flow_to_reject">
+                <di:waypoint x="870" y="260" />
+                <di:waypoint x="870" y="360" />
+                <di:waypoint x="930" y="360" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flow_accept_to_endAccept_di" bpmnElement="flow_accept_to_endAccept">
+                <di:waypoint x="1030" y="120" />
+                <di:waypoint x="1111" y="120" />
+                <di:waypoint x="1111" y="180" />
+                <di:waypoint x="1242" y="180" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flow_reject_to_endReject_di" bpmnElement="flow_reject_to_endReject">
+                <di:waypoint x="1030" y="360" />
+                <di:waypoint x="1111" y="360" />
+                <di:waypoint x="1111" y="280" />
+                <di:waypoint x="1242" y="280" />
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+
+</bpmn:definitions>
