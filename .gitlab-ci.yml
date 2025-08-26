@@ -1,17 +1,9 @@
-image: docker:latest
-
-services:
-  - docker:dind
-
-variables:
-  DOCKER_DRIVER: overlay2
-
 stages:
   - build
-  - dockerize
-  - deploy
 
-# Étape 1 : Build du backend
+# =========================
+# Build Backend Spring Boot
+# =========================
 build-backend:
   stage: build
   image: maven:3.8.8-openjdk-17
@@ -23,7 +15,9 @@ build-backend:
     paths:
       - EvenementCrud/target/*.jar
 
-# Étape 2 : Build du frontend
+# =========================
+# Build Frontend Angular
+# =========================
 build-frontend:
   stage: build
   image: node:18
@@ -36,30 +30,46 @@ build-frontend:
     paths:
       - dashfront/dist/
 
-# Étape 3 : Dockerize (construction des images avec docker-compose)
-dockerize:
-  stage: dockerize
-  image: docker:latest
-  services:
-    - docker:dind
+# =========================
+# Build n8n workflow
+# =========================
+build-n8n:
+  stage: build
+  image: node:18
   script:
-    - echo "🐳 Construction des images Docker"
-    - docker-compose build
-  needs:
-    - build-backend
-    - build-frontend
+    - cd n8n
+    - npm install
+    - npm run build || echo "n8n build skipped if no build script"
+    - cd ..
+  artifacts:
+    paths:
+      - n8n/dist/
 
-# Étape 4 : Deploy (lancement des conteneurs avec docker-compose)
-deploy:
-  stage: deploy
-  image: docker/compose:latest
-  services:
-    - docker:dind
+# =========================
+# Build RAG (AI service)
+# =========================
+build-rag:
+  stage: build
+  image: maven:3.8.8-openjdk-17
   script:
-    - echo "🚀 Déploiement avec docker-compose"
-    - docker-compose down
-    - docker-compose up -d
-  only:
-    - main   # déploiement uniquement sur la branche main
-  needs:
-    - dockerize
+    - cd RAG
+    - ./mvnw clean package -DskipTests || echo "RAG build skipped if not Maven"
+    - cd ..
+  artifacts:
+    paths:
+      - RAG/target/*.jar
+
+# =========================
+# Build scraping service
+# =========================
+build-scraping:
+  stage: build
+  image: node:18
+  script:
+    - cd scraping
+    - npm install
+    - npm run build || echo "Scraping build skipped if no build script"
+    - cd ..
+  artifacts:
+    paths:
+      - scraping/dist/

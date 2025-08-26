@@ -1,9 +1,12 @@
 version: '3.8'
 
 services:
+  # =========================
+  # Backend Spring Boot
+  # =========================
   backend:
     build:
-      context: ./EvenementCrud   # chemin vers ton backend Spring Boot
+      context: ./EvenementCrud
       dockerfile: Dockerfile
     image: appforum-backend:latest
     container_name: backend
@@ -12,9 +15,12 @@ services:
     networks:
       - appforum-network
 
+  # =========================
+  # Frontend Angular
+  # =========================
   frontend:
     build:
-      context: ./dashfront       # chemin vers ton frontend Angular
+      context: ./dashfront
       dockerfile: Dockerfile
     image: appforum-frontend:latest
     container_name: frontend
@@ -23,7 +29,55 @@ services:
     networks:
       - appforum-network
     depends_on:
-      - backend   # attendre que le backend démarre avant le frontend
+      - backend
+
+  # =========================
+  # n8n Workflow Automation
+  # =========================
+  n8n:
+    build:
+      context: ./n8n
+      dockerfile: Dockerfile
+    image: appforum-n8n:latest
+    container_name: n8n
+    ports:
+      - "5678:5678"
+    networks:
+      - appforum-network
+    depends_on:
+      - backend
+
+  # =========================
+  # RAG AI Service
+  # =========================
+  rag:
+    build:
+      context: ./RAG
+      dockerfile: Dockerfile
+    image: appforum-rag:latest
+    container_name: rag
+    ports:
+      - "9090:9090"
+    networks:
+      - appforum-network
+    depends_on:
+      - backend
+
+  # =========================
+  # Scraping Service
+  # =========================
+  scraping:
+    build:
+      context: ./scraping
+      dockerfile: Dockerfile
+    image: appforum-scraping:latest
+    container_name: scraping
+    ports:
+      - "8081:8081"
+    networks:
+      - appforum-network
+    depends_on:
+      - backend
 
 networks:
   appforum-network:
