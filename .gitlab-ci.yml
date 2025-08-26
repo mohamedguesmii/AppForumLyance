@@ -1,12 +1,22 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay2
+
 stages:
   - build
+  - dockerize
+  - deploy
 
-# =========================
-# Build Backend Spring Boot
-# =========================
+# ------------------------
+# Build Backend (Spring Boot)
+# ------------------------
 build-backend:
   stage: build
-  image: maven:3.8.8-openjdk-17
+  image: maven:3.8.8-jdk-17  # tag correct
   script:
     - cd EvenementCrud
     - ./mvnw clean package -DskipTests
@@ -15,61 +25,49 @@ build-backend:
     paths:
       - EvenementCrud/target/*.jar
 
-# =========================
-# Build Frontend Angular
-# =========================
+# ------------------------
+# Build Frontend (Angular)
+# ------------------------
 build-frontend:
   stage: build
   image: node:18
   script:
     - cd dashfront
-    - npm install
+    - npm install --legacy-peer-deps   # éviter les conflits de dépendances
     - npm run build --prod
     - cd ..
   artifacts:
     paths:
       - dashfront/dist/
 
-# =========================
-# Build n8n workflow
-# =========================
-build-n8n:
-  stage: build
-  image: node:18
+# ------------------------
+# Dockerize tous les services
+# ------------------------
+dockerize:
+  stage: dockerize
+  image: docker:latest
+  services:
+    - docker:dind
   script:
-    - cd n8n
-    - npm install
-    - npm run build || echo "n8n build skipped if no build script"
-    - cd ..
-  artifacts:
-    paths:
-      - n8n/dist/
+    - echo "🐳 Construction des images Docker"
+    - docker-compose build
+  needs:
+    - build-backend
+    - build-frontend
 
-# =========================
-# Build RAG (AI service)
-# =========================
-build-rag:
-  stage: build
-  image: maven:3.8.8-openjdk-17
+# ------------------------
+# Déploiement via Docker Compose
+# ------------------------
+deploy:
+  stage: deploy
+  image: docker/compose:latest
+  services:
+    - docker:dind
   script:
-    - cd RAG
-    - ./mvnw clean package -DskipTests || echo "RAG build skipped if not Maven"
-    - cd ..
-  artifacts:
-    paths:
-      - RAG/target/*.jar
-
-# =========================
-# Build scraping service
-# =========================
-build-scraping:
-  stage: build
-  image: node:18
-  script:
-    - cd scraping
-    - npm install
-    - npm run build || echo "Scraping build skipped if no build script"
-    - cd ..
-  artifacts:
-    paths:
-      - scraping/dist/
+    - echo "🚀 Déploiement des services"
+    - docker-compose down
+    - docker-compose up -d
+  only:
+    - main
+  needs:
+    - dockerize
