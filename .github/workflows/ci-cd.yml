@@ -21,7 +21,7 @@ jobs:
           --health-cmd="mysqladmin ping -uroot -proot"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=3
     env:
       SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/events?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&zeroDateTimeBehavior=CONVERT_TO_NULL
       SPRING_DATASOURCE_USERNAME: root
@@ -34,13 +34,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: maven
-      - name: Wait for MySQL
-        run: |
-          for i in {1..20}; do
-            mysqladmin ping -h 127.0.0.1 -uroot -proot && break
-            echo "Waiting for MySQL..."
-            sleep 3
-          done
       - name: Build Backend with Tests
         run: mvn clean package -Dspring.profiles.active=default
         working-directory: ./EvenementCrud
