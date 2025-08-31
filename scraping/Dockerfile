@@ -1,18 +1,14 @@
-# Dockerfile backend Scrapping
-FROM node:20
+# Dockerfile pour le service Scraping (Python)
+FROM python:3.11-slim
+
 WORKDIR /app
 
-# Copier package.json et package-lock.json
-COPY package*.json ./
+# Copier les fichiers requirements si tu en as un (sinon ignorer)
+# COPY requirements.txt ./requirements.txt
+# RUN pip install --no-cache-dir -r requirements.txt
 
-# Installer les dépendances
-RUN npm install --legacy-peer-deps
-
-# Copier le code source
+# Copier tout le code source
 COPY . .
 
-# Exposer le port utilisé par ton backend
-EXPOSE 3000
-
-# Lancer le backend
-CMD ["node", "index.js"]
+# Commande par défaut pour lancer le script principal
+CMD ["python", "main.py"]
