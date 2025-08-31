@@ -8,5 +8,5 @@ import tn.esprit.devoir.entite.Actualite;
 
 public interface IActualite extends JpaRepository<Actualite,Long> {
 
-    Actualite findTopByReactsIsTrue();
+   // Actualite findTopByReactsIsTrue();
 }
