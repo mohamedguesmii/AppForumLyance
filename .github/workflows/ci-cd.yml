@@ -42,6 +42,11 @@ jobs:
       - name: Build Backend with Tests
         run: mvn clean package -Dspring.profiles.active=test
         working-directory: ./EvenementCrud
+      - name: Upload backend JAR
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-jar
+          path: EvenementCrud/target/*.jar
 
   build-frontend:
     runs-on: ubuntu-latest
@@ -62,12 +67,30 @@ jobs:
       - name: Build Frontend
         run: ng build --configuration production
         working-directory: ./dashfront
+      - name: Upload frontend dist
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-dist
+          path: dashfront/dist/**
 
   dockerize:
     runs-on: ubuntu-latest
     needs: [build-backend, build-frontend]
     steps:
       - uses: actions/checkout@v3
+
+      # Téléchargement des artefacts
+      - name: Download backend JAR
+        uses: actions/download-artifact@v3
+        with:
+          name: backend-jar
+          path: EvenementCrud/target
+
+      - name: Download frontend dist
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-dist
+          path: dashfront/dist
 
       # Connexion à Docker Hub
       - name: Log in to DockerHub
