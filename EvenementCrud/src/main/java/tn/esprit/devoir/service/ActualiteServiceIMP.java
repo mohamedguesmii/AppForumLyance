@@ -47,7 +47,8 @@ public class ActualiteServiceIMP implements ActualiteService {
     }
 
     @Override
-    public Actualite Best()
-    {
-        return iActualite.findTopByReactsIsTrue();
-    }}
+    public Actualite Best() {
+        // Utilisation d'une méthode @Query dans le repository pour gérer une collection
+        return iActualite.findTopWithReacts();
+    }
+}
