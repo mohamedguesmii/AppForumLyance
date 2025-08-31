@@ -60,8 +60,9 @@ jobs:
         run: npm ci --legacy-peer-deps   # <-- correction ici
         working-directory: ./dashfront
       - name: Build Frontend
-        run: ng build --prod
+        run: ng build --configuration production
         working-directory: ./dashfront
+
 
   dockerize:
     runs-on: ubuntu-latest
