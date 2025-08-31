@@ -11,8 +11,10 @@ jobs:
       mysql:
         image: mysql:8
         env:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: ''
           MYSQL_DATABASE: events
+          MYSQL_USER: root
+          MYSQL_PASSWORD: ''
         ports:
           - 3306:3306
         options: >-
@@ -21,8 +23,8 @@ jobs:
           --health-timeout=5s
           --health-retries=3
     env:
-      SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb
-      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/events?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&zeroDateTimeBehavior=CONVERT_TO_NULL
+      SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 
     steps:
       - uses: actions/checkout@v3
@@ -33,7 +35,7 @@ jobs:
           java-version: '17'
           cache: maven
       - name: Build Backend with Tests
-        run: mvn clean package -Dspring.profiles.active=test
+        run: mvn clean package -Dspring.profiles.active=default
         working-directory: ./EvenementCrud
 
   build-frontend:
