@@ -8,10 +8,7 @@ import tn.esprit.devoir.entite.Actualite;
 @Repository
 public interface IActualite extends JpaRepository<Actualite, Long> {
 
-    // Si reacts est un boolean
-    // Actualite findTopByReactsIsTrue();
-
-    // Si reacts est une collection (ex: List reacts)
+    // Méthode pour récupérer la meilleure actualité
     @Query("SELECT a FROM Actualite a WHERE SIZE(a.reacts) > 0 ORDER BY a.id DESC")
     Actualite findTopWithReacts();
 }
