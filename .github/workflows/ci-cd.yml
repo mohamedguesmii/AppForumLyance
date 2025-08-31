@@ -43,7 +43,7 @@ jobs:
         run: mvn clean package -Dspring.profiles.active=test
         working-directory: ./EvenementCrud
 
-    build-frontend:
+  build-frontend:
     runs-on: ubuntu-latest
     needs: build-backend
     steps:
@@ -62,7 +62,6 @@ jobs:
       - name: Build Frontend
         run: ng build --prod
         working-directory: ./dashfront
-
 
   dockerize:
     runs-on: ubuntu-latest
