@@ -69,6 +69,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # Connexion à Docker Hub
       - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
@@ -76,32 +77,55 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           logout: true
 
-      # Backend Docker
+      # Build Backend Docker Image
       - name: Build Backend Docker Image
-        run: docker build -f ./EvenementCrud/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/backend:latest ./EvenementCrud
+        run: |
+          docker build -f ./EvenementCrud/Dockerfile \
+            -t ${{ secrets.DOCKER_USERNAME }}/backend:latest \
+            ./EvenementCrud
 
-      # Frontend Docker
+      # Build Frontend Docker Image
       - name: Build Frontend Docker Image
-        run: docker build -f ./dashfront/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest ./dashfront
+        run: |
+          docker build -f ./dashfront/Dockerfile \
+            -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest \
+            ./dashfront
 
-      # cv-matching-serviceAI Docker
+      # Build AI Docker Image
       - name: Build AI Docker Image
-        run: docker build -f ./cv-matching-serviceAI/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/cv-matching-serviceai:latest ./cv-matching-serviceAI
+        run: |
+          docker build -f ./cv-matching-serviceAI/Dockerfile \
+            -t ${{ secrets.DOCKER_USERNAME }}/cv-matching-serviceai:latest \
+            ./cv-matching-serviceAI
 
-      # n8n Docker
+      # Build RAG Docker Image
+      - name: Build RAG Docker Image
+        run: |
+          docker build -f ./RAG/Dockerfile \
+            -t ${{ secrets.DOCKER_USERNAME }}/rag:latest \
+            ./RAG
+
+      # Build n8n Docker Image
       - name: Build n8n Docker Image
-        run: docker build -f ./n8n/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/n8n:latest ./n8n
+        run: |
+          docker build -f ./n8n/Dockerfile \
+            -t ${{ secrets.DOCKER_USERNAME }}/n8n:latest \
+            ./n8n
 
-      # scraping Docker
-      - name: Build scraping Docker Image
-        run: docker build -f ./scraping/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/scraping:latest ./scraping
+      # Build scraping Docker Image
+      - name: Build Scraping Docker Image
+        run: |
+          docker build -f ./scraping/Dockerfile \
+            -t ${{ secrets.DOCKER_USERNAME }}/scraping:latest \
+            ./scraping
 
-      # Push all images
+      # Push de toutes les images
       - name: Push Docker Images
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/cv-matching-serviceai:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/rag:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/n8n:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/scraping:latest
 
