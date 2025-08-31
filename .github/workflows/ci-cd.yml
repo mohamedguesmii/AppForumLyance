@@ -32,8 +32,15 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: maven
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            mysqladmin ping -h127.0.0.1 -uroot -proot && break
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
       - name: Build Backend with Tests
-        run: mvn clean package -Dspring.profiles.active=default
+        run: mvn clean package -Dspring.profiles.active=test
         working-directory: ./EvenementCrud
 
   build-frontend:
