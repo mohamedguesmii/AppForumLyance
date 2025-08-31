@@ -57,7 +57,7 @@ jobs:
       - name: Install Angular CLI
         run: npm install -g @angular/cli
       - name: Install Frontend Dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps   # <-- correction ici
         working-directory: ./dashfront
       - name: Build Frontend
         run: ng build --prod
