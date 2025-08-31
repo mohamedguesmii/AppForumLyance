@@ -1,21 +1,20 @@
-# Dockerfile frontend Angular
-FROM node:20 AS build
+# Utiliser une image Python officielle
+FROM python:3.11-slim
+
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier package.json et package-lock.json
-COPY package*.json ./
+# Copier le fichier requirements
+COPY requirements.txt.txt ./requirements.txt
 
-# Installer les dépendances en ignorant les conflits
-RUN npm install --legacy-peer-deps
+# Installer les dépendances Python
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copier tout le code source
+# Copier le code source
 COPY . .
 
-# Builder Angular
-RUN npm run build --prod
+# Exposer le port si nécessaire (ex: FastAPI, Flask)
+EXPOSE 8000
 
-# Étape Nginx pour servir le frontend
-FROM nginx:alpine
-COPY --from=build /app/dist/ /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Commande par défaut pour lancer le service (à adapter selon ton app)
+CMD ["python", "matching_service.py"]
