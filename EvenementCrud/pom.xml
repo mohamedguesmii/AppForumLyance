@@ -81,6 +81,13 @@
             <version>8.0.33</version>
         </dependency>
 
+        <!-- H2 pour tests -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Cloudinary -->
         <dependency>
             <groupId>com.cloudinary</groupId>
