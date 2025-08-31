@@ -79,7 +79,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Téléchargement des artefacts
       - name: Download backend JAR
         uses: actions/download-artifact@v4
         with:
@@ -92,65 +91,63 @@ jobs:
           name: frontend-dist
           path: dashfront/dist
 
-      # Connexion à Docker Hub
-      - name: Log in to DockerHub
-        uses: docker/login-action@v2
+      # Build & Push Docker Images
+      - name: Build & Push Docker Images
+        uses: docker/build-push-action@v4
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          logout: true
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/backend:latest
+            ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+            ${{ secrets.DOCKER_USERNAME }}/cv-matching-serviceai:latest
+            ${{ secrets.DOCKER_USERNAME }}/rag:latest
+            ${{ secrets.DOCKER_USERNAME }}/n8n:latest
+            ${{ secrets.DOCKER_USERNAME }}/scraping:latest
+          build-args: |
+            BACKEND_JAR=EvenementCrud/target/*.jar
+          file: ./EvenementCrud/Dockerfile
+          context: ./EvenementCrud
 
-      # Build Backend Docker Image
-      - name: Build Backend Docker Image
-        run: |
-          docker build -f ./EvenementCrud/Dockerfile \
-            -t ${{ secrets.DOCKER_USERNAME }}/backend:latest \
-            ./EvenementCrud
+      # Pour chaque autre service, répéter le build
+      - name: Build Frontend Docker
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+          file: ./dashfront/Dockerfile
+          context: ./dashfront
 
-      # Build Frontend Docker Image
-      - name: Build Frontend Docker Image
-        run: |
-          docker build -f ./dashfront/Dockerfile \
-            -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest \
-            ./dashfront
+      - name: Build AI Docker
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/cv-matching-serviceai:latest
+          file: ./cv-matching-serviceAI/Dockerfile
+          context: ./cv-matching-serviceAI
 
-      # Build AI Docker Image
-      - name: Build AI Docker Image
-        run: |
-          docker build -f ./cv-matching-serviceAI/Dockerfile \
-            -t ${{ secrets.DOCKER_USERNAME }}/cv-matching-serviceai:latest \
-            ./cv-matching-serviceAI
+      - name: Build RAG Docker
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/rag:latest
+          file: ./RAG/Dockerfile
+          context: ./RAG
 
-      # Build RAG Docker Image
-      - name: Build RAG Docker Image
-        run: |
-          docker build -f ./RAG/Dockerfile \
-            -t ${{ secrets.DOCKER_USERNAME }}/rag:latest \
-            ./RAG
+      - name: Build n8n Docker
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/n8n:latest
+          file: ./n8n/Dockerfile
+          context: ./n8n
 
-      # Build n8n Docker Image
-      - name: Build n8n Docker Image
-        run: |
-          docker build -f ./n8n/Dockerfile \
-            -t ${{ secrets.DOCKER_USERNAME }}/n8n:latest \
-            ./n8n
-
-      # Build scraping Docker Image
-      - name: Build Scraping Docker Image
-        run: |
-          docker build -f ./scraping/Dockerfile \
-            -t ${{ secrets.DOCKER_USERNAME }}/scraping:latest \
-            ./scraping
-
-      # Push de toutes les images
-      - name: Push Docker Images
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/cv-matching-serviceai:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/rag:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/n8n:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/scraping:latest
+      - name: Build Scraping Docker
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/scraping:latest
+          file: ./scraping/Dockerfile
+          context: ./scraping
 
   deploy:
     runs-on: ubuntu-latest
