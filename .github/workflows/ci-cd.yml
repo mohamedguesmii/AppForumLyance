@@ -12,11 +12,11 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'        # Champ requis
+          distribution: 'temurin'
           java-version: '17'
-          cache: 'maven'                 # Optionnel mais recommandé
-      - name: Build Backend
-        run: mvn clean package -DskipTests=false
+          cache: maven
+      - name: Build Backend with Debug
+        run: mvn clean package -e -X
         working-directory: ./EvenementCrud
 
   build-frontend:
@@ -28,11 +28,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-          cache: 'npm'                  # Mise en cache npm
+          cache: npm
       - name: Global Angular CLI
         run: npm install -g @angular/cli
       - name: Install Frontend Dependencies
-        run: npm ci                    # plus fiable qu’`npm install`
+        run: npm ci
         working-directory: ./dashfront
       - name: Build Frontend
         run: ng build --prod
