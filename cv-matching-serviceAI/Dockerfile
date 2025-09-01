@@ -1,20 +1,19 @@
-# Utiliser une image Python officielle
+# Dockerfile cv-matching-serviceAI
 FROM python:3.11-slim
 
 # Définir le répertoire de travail
 WORKDIR /app
 
-# Copier le fichier requirements
-COPY requirements.txt.txt ./requirements.txt
+# Copier le fichier requirements et installer les dépendances
+COPY requirements.txt ./requirements.txt
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
-# Installer les dépendances Python
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copier le code source
+# Copier tout le code source
 COPY . .
 
 # Exposer le port si nécessaire (ex: FastAPI, Flask)
 EXPOSE 8000
 
-# Commande par défaut pour lancer le service (à adapter selon ton app)
+# Lancer le service
 CMD ["python", "matching_service.py"]
